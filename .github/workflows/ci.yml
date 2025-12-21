@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: Format check
+        run: |
+          vendor/bin/mago format
+          git diff --exit-code
+
+      - name: Static analysis
+        run: vendor/bin/mago analyze
+
+      - name: Tests
+        run: vendor/bin/phpunit

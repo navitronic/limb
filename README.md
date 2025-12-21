@@ -62,3 +62,13 @@ Run the test suite with:
 ```sh
 vendor/bin/phpunit
 ```
+
+## Publishing (Packagist)
+
+This package is intended for Packagist distribution.
+
+1. Create the package on Packagist and point it at this GitHub repository.
+2. Add the Packagist webhook to the GitHub repo (Packagist provides the URL).
+3. Tag releases and push tags (e.g., `git tag v0.1.0 && git push --tags`).
+
+Packagist will auto-update on new tags once the webhook is configured.
