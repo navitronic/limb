@@ -2,6 +2,21 @@
 
 A really simple static site generator. Less is more, buddy...
 
+## CLI
+
+The project ships a minimal CLI entry point:
+
+```sh
+./bin/limb list
+./bin/limb render content/post.md > output.html
+```
+
+If installed via Composer, you can also run:
+
+```sh
+vendor/bin/limb render content/post.md > output.html
+```
+
 ## Markdown usage
 
 ```php

@@ -11,6 +11,7 @@
 
 - `composer install`: install PHP dependencies into `vendor/`.
 - `composer update <package>`: add/update a dependency and refresh `composer.lock`.
+- `./bin/limb list`: list available CLI commands (or use `vendor/bin/limb` after install).
 - `vendor/bin/phpunit`: run the test suite.
 - `vendor/bin/mago analyze`: run static analysis (required after any code change).
 - `vendor/bin/mago format`: apply the configured formatter (required after any code change; 4 spaces, 120 char lines).

@@ -16,6 +16,9 @@
             "Limb\\Tests\\": "tests/"
         }
     },
+    "bin": [
+        "bin/limb"
+    ],
     "authors": [
         {
             "name": "Adrian",
@@ -30,6 +33,7 @@
     "require": {
         "php": "^8.4",
         "league/commonmark": "^2.5",
+        "symfony/console": "^7.0",
         "symfony/yaml": "^7.0"
     }
 }

@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$application = new \Symfony\Component\Console\Application('Limb');
+$application->add(new \Limb\Console\Command\RenderCommand());
+
+exit($application->run());
