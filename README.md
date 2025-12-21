@@ -9,7 +9,7 @@ A really simple static site generator. Less is more, buddy...
 
 require __DIR__ . '/vendor/autoload.php';
 
-$renderer = new \Limb\MarkdownRenderer();
+$renderer = new \Limb\Markdown\MarkdownRenderer();
 $html = $renderer->toHtml("# Hello\n\nThis is **markdown**.");
 
 echo $html;
@@ -22,7 +22,7 @@ echo $html;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$renderer = new \Limb\MarkdownRenderer();
+$renderer = new \Limb\Markdown\MarkdownRenderer();
 $limb = $renderer->parse("---\n" .
     "title: Hello\n" .
     "tags:\n" .
@@ -38,4 +38,12 @@ if ($limb === null) {
 
 var_dump($limb->metadata);
 echo $limb->html;
+```
+
+## Testing
+
+Run the test suite with:
+
+```sh
+vendor/bin/phpunit
 ```

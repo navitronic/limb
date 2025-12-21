@@ -1,101 +1,24 @@
 <?php
 
-declare(strict_types=1);
+namespace Limb\Markdown;
 
-namespace Limb;
-
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Exception\AlreadyInitializedException;
-use League\CommonMark\Exception\CommonMarkException;
-use League\CommonMark\Extension\FrontMatter\Exception\InvalidFrontMatterException;
-use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
-use League\CommonMark\Extension\FrontMatter\FrontMatterParserInterface;
-
-final class MarkdownRenderer
+final class MetadataResolver
 {
-    private CommonMarkConverter $converter;
-    private FrontMatterParserInterface $frontMatterParser;
-
     /**
-     * @param array<string, mixed> $config
-     *
-     * @throws AlreadyInitializedException
+     * @param array<string, mixed> $metadata
      */
-    public function __construct(array $config = [])
+    public function resolve(array $metadata, string $content, ?string $sourcePath): ResolvedMetadata
     {
-        $this->converter = new CommonMarkConverter($config);
-        $frontMatterExtension = new FrontMatterExtension();
-        $this->converter->getEnvironment()->addExtension($frontMatterExtension);
-        $this->frontMatterParser = $frontMatterExtension->getFrontMatterParser();
-    }
+        $title = $this->resolveTitle($metadata, $content, $sourcePath);
+        $slug = $this->resolveSlug($metadata, $sourcePath, $title);
+        $createdAt = $this->resolveDate($metadata, ['created_at', 'createdAt', 'date']);
+        $updatedAt = $this->resolveDate($metadata, ['updated_at', 'updatedAt', 'updated']);
 
-    /**
-     * @throws CommonMarkException
-     */
-    public function toHtml(string $markdown): string
-    {
-        return $this->converter->convert($markdown)->getContent();
-    }
-
-    /**
-     * @return Limb|null Returns null when markdown cannot be parsed.
-     */
-    public function parse(string $markdown, ?string $sourcePath = null): ?Limb
-    {
-        try {
-            $parsed = $this->frontMatterParser->parse($markdown);
-            $content = $parsed->getContent();
-            $metadata = $this->normalizeMetadata($parsed->getFrontMatter());
-            $title = $this->resolveTitle($metadata, $content, $sourcePath);
-            $slug = $this->resolveSlug($metadata, $sourcePath, $title);
-            $createdAt = $this->resolveDate($metadata, ['created_at', 'createdAt', 'date']);
-            $updatedAt = $this->resolveDate($metadata, ['updated_at', 'updatedAt', 'updated']);
-            $html = $this->converter->convert($content)->getContent();
-
-            if ($createdAt === null) {
-                $createdAt = $updatedAt ?? new \DateTime();
-            }
-
-            return new Limb($title, $slug, $createdAt, $updatedAt, $content, $html, $metadata);
-        } catch (CommonMarkException | InvalidFrontMatterException) {
-            return null;
-        }
-    }
-
-    /**
-     * @return Limb|null Returns null when markdown cannot be parsed.
-     *
-     * @throws \RuntimeException
-     */
-    public function parseFile(string $path): ?Limb
-    {
-        $contents = \file_get_contents($path);
-        if ($contents === false) {
-            throw new \RuntimeException("Unable to read markdown file: {$path}");
+        if ($createdAt === null) {
+            $createdAt = $updatedAt ?? new \DateTime();
         }
 
-        return $this->parse($contents, $path);
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function normalizeMetadata(mixed $frontMatter): array
-    {
-        if (!\is_array($frontMatter)) {
-            return [];
-        }
-
-        $metadata = [];
-        foreach (\array_keys($frontMatter) as $key) {
-            if (!\is_string($key)) {
-                continue;
-            }
-
-            $metadata[$key] = $frontMatter[$key];
-        }
-
-        return $metadata;
+        return new ResolvedMetadata($title, $slug, $createdAt, $updatedAt);
     }
 
     /**

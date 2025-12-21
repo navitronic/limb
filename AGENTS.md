@@ -11,8 +11,9 @@
 
 - `composer install`: install PHP dependencies into `vendor/`.
 - `composer update <package>`: add/update a dependency and refresh `composer.lock`.
-- `vendor/bin/mago analyze`: run static analysis (required before PRs).
-- `vendor/bin/mago format`: apply the configured formatter (4 spaces, 120 char lines).
+- `vendor/bin/phpunit`: run the test suite.
+- `vendor/bin/mago analyze`: run static analysis (required after any code change).
+- `vendor/bin/mago format`: apply the configured formatter (required after any code change; 4 spaces, 120 char lines).
 
 There is no build step or local server yet; this is a library-style codebase.
 
@@ -24,7 +25,7 @@ There is no build step or local server yet; this is a library-style codebase.
 
 ## Testing Guidelines
 
-- No test framework is set up yet. If you add tests, document the command here and keep them in `tests/`.
+- Tests live in `tests/` and use PHPUnit. Run them with `vendor/bin/phpunit`.
 - When changing parsing logic, include at least one minimal fixture or usage example in `README.md`.
 
 ## Commit & Pull Request Guidelines
