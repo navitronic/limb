@@ -1,0 +1,24 @@
+{
+    "name": "navitronic/limb",
+    "description": "A really simple static site generator. Less is more, buddy...",
+    "type": "project",
+    "require-dev": {
+        "carthage-software/mago": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Limb\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adrian",
+            "email": "navitronic@gmail.com"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "carthage-software/mago": true
+        }
+    }
+}
