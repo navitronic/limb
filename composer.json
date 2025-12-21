@@ -20,5 +20,10 @@
         "allow-plugins": {
             "carthage-software/mago": true
         }
+    },
+    "require": {
+        "php": "^8.4",
+        "league/commonmark": "^2.5",
+        "symfony/yaml": "^7.0"
     }
 }
