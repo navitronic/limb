@@ -1,7 +1,7 @@
 {
     "name": "navitronic/limb",
     "description": "A really simple static site generator. Less is more, buddy...",
-    "type": "project",
+    "type": "library",
     "require-dev": {
         "carthage-software/mago": "^1.0",
         "phpunit/phpunit": "^11.5"
