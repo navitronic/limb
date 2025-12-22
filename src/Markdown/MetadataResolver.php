@@ -9,73 +9,93 @@ final class MetadataResolver
      */
     public function resolve(array $metadata, string $content, ?string $sourcePath): ResolvedMetadata
     {
-        $title = $this->resolveTitle($metadata, $content, $sourcePath);
-        $slug = $this->resolveSlug($metadata, $sourcePath, $title);
-        $createdAt = $this->resolveDate($metadata, ['created_at', 'createdAt', 'date']);
-        $updatedAt = $this->resolveDate($metadata, ['updated_at', 'updatedAt', 'updated']);
+        $assignableKeys = [];
+        [$title, $assignableTitle] = $this->resolveTitle($metadata, $content, $sourcePath);
+        if ($assignableTitle) {
+            $assignableKeys[] = 'title';
+        }
+
+        [$slug, $assignableSlug] = $this->resolveSlug($metadata, $sourcePath, $title);
+        if ($assignableSlug) {
+            $assignableKeys[] = 'slug';
+        }
+
+        [$createdAt, $createdKeys] = $this->resolveDate($metadata, ['created_at', 'createdAt', 'date']);
+        $assignableKeys = \array_merge($assignableKeys, $createdKeys);
+
+        [$updatedAt, $updatedKeys] = $this->resolveDate($metadata, ['updated_at', 'updatedAt', 'updated']);
+        $assignableKeys = \array_merge($assignableKeys, $updatedKeys);
 
         if ($createdAt === null) {
             $createdAt = $updatedAt ?? new \DateTime();
         }
 
-        return new ResolvedMetadata($title, $slug, $createdAt, $updatedAt);
+        $extra = $this->resolveExtra($metadata, $assignableKeys);
+
+        return new ResolvedMetadata($title, $slug, $createdAt, $updatedAt, $extra);
     }
 
     /**
      * @param array<string, mixed> $metadata
+     * @return array{0: string, 1: bool}
      */
-    private function resolveTitle(array $metadata, string $content, ?string $sourcePath): string
+    private function resolveTitle(array $metadata, string $content, ?string $sourcePath): array
     {
         if (\array_key_exists('title', $metadata) && \is_string($metadata['title'])) {
             $titleValue = \trim($metadata['title']);
             if ($titleValue !== '') {
-                return $titleValue;
+                return [$titleValue, true];
             }
         }
 
         $matches = null;
         if (\preg_match('/^#{1,6}\s+(.+?)\s*#*\s*$/m', $content, $matches) === 1) {
-            return \trim($matches[1]);
+            return [\trim($matches[1]), false];
         }
 
         if ($sourcePath !== null) {
             $filename = \pathinfo($sourcePath, \PATHINFO_FILENAME);
             if ($filename !== '') {
-                return $this->humanizeFilename($filename);
+                return [$this->humanizeFilename($filename), false];
             }
         }
 
-        return 'Untitled';
+        return ['Untitled', false];
     }
 
     /**
      * @param array<string, mixed> $metadata
+     * @return array{0: string, 1: bool}
      */
-    private function resolveSlug(array $metadata, ?string $sourcePath, string $title): string
+    private function resolveSlug(array $metadata, ?string $sourcePath, string $title): array
     {
         if (\array_key_exists('slug', $metadata) && \is_string($metadata['slug'])) {
             $slugValue = \trim($metadata['slug']);
             if ($slugValue !== '') {
-                return $slugValue;
+                return [$slugValue, true];
             }
         }
 
         if ($sourcePath !== null) {
             $filename = \pathinfo($sourcePath, \PATHINFO_FILENAME);
             if ($filename !== '') {
-                return $this->slugify($filename);
+                return [$this->slugify($filename), false];
             }
         }
 
-        return $this->slugify($title);
+        return [$this->slugify($title), false];
     }
 
     /**
      * @param array<string, mixed> $metadata
      * @param array<int, string> $keys
+     * @return array{0: ?\DateTime, 1: array<int, string>}
      */
-    private function resolveDate(array $metadata, array $keys): ?\DateTime
+    private function resolveDate(array $metadata, array $keys): array
     {
+        $resolved = null;
+        $assignableKeys = [];
+
         foreach ($keys as $key) {
             if (!\array_key_exists($key, $metadata)) {
                 continue;
@@ -83,11 +103,34 @@ final class MetadataResolver
 
             $parsed = $this->parseDateValue($metadata[$key]);
             if ($parsed !== null) {
-                return $parsed;
+                $assignableKeys[] = $key;
+                if ($resolved === null) {
+                    $resolved = $parsed;
+                }
             }
         }
 
-        return null;
+        return [$resolved, $assignableKeys];
+    }
+
+    /**
+     * @param array<string, mixed> $metadata
+     * @param array<int, string> $assignableKeys
+     *
+     * @return array<string, mixed>
+     */
+    private function resolveExtra(array $metadata, array $assignableKeys): array
+    {
+        if ($assignableKeys === []) {
+            return $metadata;
+        }
+
+        $extra = $metadata;
+        foreach (\array_unique($assignableKeys) as $key) {
+            unset($extra[$key]);
+        }
+
+        return $extra;
     }
 
     private function parseDateValue(mixed $value): ?\DateTime

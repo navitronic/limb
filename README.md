@@ -43,6 +43,7 @@ $limb = $renderer->parse("---\n" .
     "tags:\n" .
     "  - intro\n" .
     "  - demo\n" .
+    "draft: true\n" .
     "---\n\n" .
     "# Hello\n\nThis is **markdown**.");
 
@@ -52,6 +53,11 @@ if ($limb === null) {
 }
 
 var_dump($limb->metadata);
+
+$resolver = new \Limb\Markdown\MetadataResolver();
+$resolved = $resolver->resolve($limb->metadata, $limb->content, null);
+
+var_dump($resolved->extra);
 echo $limb->html;
 ```
 
