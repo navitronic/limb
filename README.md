@@ -24,7 +24,8 @@ vendor/bin/limb render content/post.md > output.html
 
 require __DIR__ . '/vendor/autoload.php';
 
-$renderer = new \Limb\Markdown\MarkdownRenderer();
+$container = \Limb\Container\LimbContainerFactory::create();
+$renderer = $container->get(\Limb\Markdown\MarkdownRenderer::class);
 $html = $renderer->toHtml("# Hello\n\nThis is **markdown**.");
 
 echo $html;
@@ -37,7 +38,8 @@ echo $html;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$renderer = new \Limb\Markdown\MarkdownRenderer();
+$container = \Limb\Container\LimbContainerFactory::create();
+$renderer = $container->get(\Limb\Markdown\MarkdownRenderer::class);
 $limb = $renderer->parse("---\n" .
     "title: Hello\n" .
     "tags:\n" .
@@ -54,7 +56,7 @@ if ($limb === null) {
 
 var_dump($limb->metadata);
 
-$resolver = new \Limb\Markdown\MetadataResolver();
+$resolver = $container->get(\Limb\Markdown\MetadataResolver::class);
 $resolved = $resolver->resolve($limb->metadata, $limb->content, null);
 
 var_dump($resolved->extra);

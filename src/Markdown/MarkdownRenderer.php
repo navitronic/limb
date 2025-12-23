@@ -14,18 +14,14 @@ final class MarkdownRenderer
     private MarkdownHtmlRenderer $htmlRenderer;
     private MetadataResolver $metadataResolver;
 
-    /**
-     * @param array<string, mixed> $config
-     */
     public function __construct(
-        array $config = [],
-        ?FrontMatterParser $frontMatterParser = null,
-        ?MarkdownHtmlRenderer $htmlRenderer = null,
-        ?MetadataResolver $metadataResolver = null,
+        FrontMatterParser $frontMatterParser,
+        MarkdownHtmlRenderer $htmlRenderer,
+        MetadataResolver $metadataResolver,
     ) {
-        $this->frontMatterParser = $frontMatterParser ?? new FrontMatterParser();
-        $this->htmlRenderer = $htmlRenderer ?? new MarkdownHtmlRenderer($config);
-        $this->metadataResolver = $metadataResolver ?? new MetadataResolver();
+        $this->frontMatterParser = $frontMatterParser;
+        $this->htmlRenderer = $htmlRenderer;
+        $this->metadataResolver = $metadataResolver;
     }
 
     /**
