@@ -3,9 +3,18 @@
 
 declare(strict_types=1);
 
+use Limb\Container\LimbContainerFactory;
+use Symfony\Component\Console\Application;
+
 require __DIR__ . '/../vendor/autoload.php';
 
-$application = new \Symfony\Component\Console\Application('Limb');
-$application->add(new \Limb\Console\Command\RenderCommand());
+$application = new Application('Limb');
+$container = LimbContainerFactory::create();
+$application->addCommand($container->get(\Limb\Console\Command\RenderCommand::class));
 
-exit($application->run());
+try {
+    exit($application->run());
+} catch (Throwable $e) {
+    echo 'Error: ' . $e->getMessage() . PHP_EOL;
+    exit(1);
+}

@@ -33,6 +33,7 @@
     "require": {
         "php": "^8.4",
         "league/commonmark": "^2.5",
+        "league/container": "^4.2",
         "symfony/console": "^7.0",
         "symfony/yaml": "^7.0"
     }

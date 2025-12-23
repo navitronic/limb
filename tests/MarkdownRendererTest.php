@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Limb\Tests;
 
+use Limb\Container\LimbContainerFactory;
 use Limb\Markdown\MarkdownRenderer;
 use PHPUnit\Framework\TestCase;
 
@@ -11,7 +12,7 @@ final class MarkdownRendererTest extends TestCase
 {
     public function testToHtmlRendersMarkdown(): void
     {
-        $renderer = new MarkdownRenderer();
+        $renderer = $this->createRenderer();
 
         $html = $renderer->toHtml("# Hello\n\nWorld");
 
@@ -22,7 +23,7 @@ final class MarkdownRendererTest extends TestCase
 
     public function testParseReturnsLimbWithMetadataAndHtml(): void
     {
-        $renderer = new MarkdownRenderer();
+        $renderer = $this->createRenderer();
 
         $markdown = "---\n" .
             "title: Hello World\n" .
@@ -48,7 +49,7 @@ final class MarkdownRendererTest extends TestCase
 
     public function testParseUsesFilenameFallbacks(): void
     {
-        $renderer = new MarkdownRenderer();
+        $renderer = $this->createRenderer();
 
         $limb = $renderer->parse("Just text\n", '/tmp/my-first-post.md');
 
@@ -59,7 +60,7 @@ final class MarkdownRendererTest extends TestCase
 
     public function testParseReturnsNullOnInvalidFrontMatter(): void
     {
-        $renderer = new MarkdownRenderer();
+        $renderer = $this->createRenderer();
 
         $markdown = "---\n" .
             "title: [unclosed\n" .
@@ -71,7 +72,7 @@ final class MarkdownRendererTest extends TestCase
 
     public function testParseFileReturnsLimb(): void
     {
-        $renderer = new MarkdownRenderer();
+        $renderer = $this->createRenderer();
         $path = \tempnam(\sys_get_temp_dir(), 'limb_');
 
         $this->assertNotFalse($path, 'Failed to create temporary file.');
@@ -99,10 +100,17 @@ final class MarkdownRendererTest extends TestCase
 
     public function testParseFileThrowsWhenMissing(): void
     {
-        $renderer = new MarkdownRenderer();
+        $renderer = $this->createRenderer();
 
         $this->expectException(\RuntimeException::class);
 
         $renderer->parseFile('/tmp/limb-missing-file-' . \uniqid() . '.md');
+    }
+
+    private function createRenderer(): MarkdownRenderer
+    {
+        $container = LimbContainerFactory::create();
+
+        return $container->get(MarkdownRenderer::class);
     }
 }
