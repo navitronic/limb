@@ -91,28 +91,28 @@ src/
 
 **Tasks:**
 
-- [ ] Create the Symfony skeleton:
+- [x] Create the Symfony skeleton:
   ```bash
   composer create-project symfony/skeleton:"7.4.*" .
   ```
-- [ ] Install core dependencies:
+- [x] Install core dependencies:
   ```bash
   composer require twig symfony/twig-bundle twig/extra-bundle league/commonmark
   composer require --dev symfony/test-pack
   ```
-- [ ] Create `Dockerfile` with multi-stage build:
+- [x] Create `Dockerfile` with multi-stage build:
   - **Base stage** (`php:8.4-cli`): install `intl`, `zip`, `opcache` extensions; copy Composer from `composer:2`
   - **Dev stage**: extends base, adds xdebug, runs `composer install`, sets `CMD ["php", "bin/console"]`
   - **Production stage**: multi-stage with optimised autoloader, no dev dependencies
-- [ ] Create `docker-compose.yml`:
+- [x] Create `docker-compose.yml`:
   - Service `app` using dev stage
   - Mount current directory to `/app`
   - Mount placeholder for site at `/site`
   - Default command: `php bin/console`
-- [ ] Create a `site:build` command skeleton (`src/Command/SiteBuildCommand.php`):
+- [x] Create a `site:build` command skeleton (`src/Command/SiteBuildCommand.php`):
   - Accepts `--source` (default: `/site`), `--destination`, `--config`, `--drafts`, `--future`, `--verbose`
   - For now: outputs "Limb build starting..." and exits 0
-- [ ] Create `.gitignore` for Symfony (vendor/, var/, .env.local, etc.)
+- [x] Create `.gitignore` for Symfony (vendor/, var/, .env.local, etc.)
 
 **Verification:**
 ```bash
@@ -135,11 +135,11 @@ docker compose run --rm app php bin/console list
 
 **Tasks:**
 
-- [ ] Install PHP-CS-Fixer:
+- [x] Install PHP-CS-Fixer:
   ```bash
   composer require --dev friendsofphp/php-cs-fixer
   ```
-- [ ] Create `.php-cs-fixer.dist.php` at the project root:
+- [x] Create `.php-cs-fixer.dist.php` at the project root:
   - Use the `@Symfony` rule set as the base (Symfony's own coding standard)
   - Enable `@Symfony:risky` rules
   - Enable `declare_strict_types` fixer (enforce `declare(strict_types=1)` in every PHP file)
@@ -167,11 +167,11 @@ docker compose run --rm app php bin/console list
         ->setFinder($finder)
         ->setRiskyAllowed(true);
     ```
-- [ ] Install PHPStan with Symfony extension:
+- [x] Install PHPStan with Symfony extension:
   ```bash
   composer require --dev phpstan/phpstan phpstan/phpstan-symfony
   ```
-- [ ] Create `phpstan.neon` at the project root:
+- [x] Create `phpstan.neon` at the project root:
   - Set level to `max` (level 9 — strictest)
   - Scan `src/`
   - Include the Symfony extension config
@@ -186,15 +186,15 @@ docker compose run --rm app php bin/console list
     includes:
         - vendor/phpstan/phpstan-symfony/extension.neon
     ```
-- [ ] Run PHP-CS-Fixer on existing code and fix any issues:
+- [x] Run PHP-CS-Fixer on existing code and fix any issues:
   ```bash
   vendor/bin/php-cs-fixer fix
   ```
-- [ ] Run PHPStan on existing code and fix any issues:
+- [x] Run PHPStan on existing code and fix any issues:
   ```bash
   vendor/bin/phpstan analyse
   ```
-- [ ] Add Composer scripts for convenience:
+- [x] Add Composer scripts for convenience:
   ```json
   {
     "scripts": {
@@ -206,7 +206,7 @@ docker compose run --rm app php bin/console list
     }
   }
   ```
-- [ ] Add `.php-cs-fixer.cache` to `.gitignore`
+- [x] Add `.php-cs-fixer.cache` to `.gitignore`
 
 **Verification:**
 ```bash
