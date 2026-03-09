@@ -24,6 +24,7 @@
 | 13 | Post permalink       | `/:year/:month/:day/:title/`                   | Jekyll convention                |
 | 14 | Page permalink       | `/:title/`                                     | Pretty URLs                      |
 | 15 | Development method   | **Test-Driven Development (TDD)**              | Tests written before code        |
+| 16 | Code quality tooling | **PHP-CS-Fixer + PHPStan**                     | Symfony-native; strictest levels |
 
 ---
 
@@ -128,7 +129,104 @@ docker compose run --rm app php bin/console list
 
 ---
 
-### Checkpoint 2 — Configuration Loading
+### Checkpoint 2 — PHP Code Quality Tooling
+
+**Goal:** PHP-CS-Fixer and PHPStan are installed, configured, and passing on the existing codebase. All subsequent code must satisfy both tools.
+
+**Tasks:**
+
+- [ ] Install PHP-CS-Fixer:
+  ```bash
+  composer require --dev friendsofphp/php-cs-fixer
+  ```
+- [ ] Create `.php-cs-fixer.dist.php` at the project root:
+  - Use the `@Symfony` rule set as the base (Symfony's own coding standard)
+  - Enable `@Symfony:risky` rules
+  - Enable `declare_strict_types` fixer (enforce `declare(strict_types=1)` in every PHP file)
+  - Enable `strict_param` fixer
+  - Set finder to scan `src/` and `tests/`
+  - Exclude `var/`, `vendor/`, `config/`
+  - Example config:
+    ```php
+    <?php
+    $finder = (new PhpCsFixer\Finder())
+        ->in([__DIR__ . '/src', __DIR__ . '/tests'])
+        ->exclude(['var', 'vendor']);
+
+    return (new PhpCsFixer\Config())
+        ->setRules([
+            '@Symfony' => true,
+            '@Symfony:risky' => true,
+            'declare_strict_types' => true,
+            'strict_param' => true,
+            'array_syntax' => ['syntax' => 'short'],
+            'ordered_imports' => ['sort_algorithm' => 'alpha'],
+            'no_unused_imports' => true,
+            'single_line_throw' => false,
+        ])
+        ->setFinder($finder)
+        ->setRiskyAllowed(true);
+    ```
+- [ ] Install PHPStan with Symfony extension:
+  ```bash
+  composer require --dev phpstan/phpstan phpstan/phpstan-symfony
+  ```
+- [ ] Create `phpstan.neon` at the project root:
+  - Set level to `max` (level 9 — strictest)
+  - Scan `src/`
+  - Include the Symfony extension config
+  - Example config:
+    ```neon
+    parameters:
+        level: max
+        paths:
+            - src
+        symfony:
+            containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    includes:
+        - vendor/phpstan/phpstan-symfony/extension.neon
+    ```
+- [ ] Run PHP-CS-Fixer on existing code and fix any issues:
+  ```bash
+  vendor/bin/php-cs-fixer fix
+  ```
+- [ ] Run PHPStan on existing code and fix any issues:
+  ```bash
+  vendor/bin/phpstan analyse
+  ```
+- [ ] Add Composer scripts for convenience:
+  ```json
+  {
+    "scripts": {
+      "cs:check": "php-cs-fixer fix --dry-run --diff",
+      "cs:fix": "php-cs-fixer fix",
+      "stan": "phpstan analyse",
+      "lint": ["@cs:check", "@stan"],
+      "test": "phpunit"
+    }
+  }
+  ```
+- [ ] Add `.php-cs-fixer.cache` to `.gitignore`
+
+**Verification:**
+```bash
+docker compose run --rm app composer cs:check
+# No fixable violations found — exit code 0
+
+docker compose run --rm app composer stan
+# No errors — exit code 0
+
+docker compose run --rm app composer lint
+# Both checks pass — exit code 0
+```
+
+**Done when:** Both PHP-CS-Fixer (`@Symfony` rules) and PHPStan (level max) pass cleanly. Composer scripts `cs:check`, `cs:fix`, `stan`, and `lint` are wired up.
+
+**From this point forward:** All code written in subsequent checkpoints must pass `composer lint` before the checkpoint is considered complete.
+
+---
+
+### Checkpoint 3 — Configuration Loading
 
 **Goal:** Limb reads `_config.yml` from the site directory and merges it with defaults into a typed `SiteConfig` object.
 
@@ -160,6 +258,7 @@ docker compose run --rm app php bin/console list
 - [ ] Register services in `config/services.yaml`
 - [ ] Update `site:build` to load and merge config, output resolved config values in verbose mode
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
@@ -172,13 +271,16 @@ docker compose run --rm -v /tmp/test-site:/site app php bin/console site:build -
 
 docker compose run --rm app php bin/phpunit
 # Config tests pass
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Config loads from YAML, merges correctly per precedence order, and unit tests pass.
+**Done when:** Config loads from YAML, merges correctly per precedence order, unit tests pass, and `composer lint` is clean.
 
 ---
 
-### Checkpoint 3 — Content Discovery & Classification
+### Checkpoint 4 — Content Discovery & Classification
 
 **Goal:** Limb scans a site directory and classifies every file as content, layout, include, data, static asset, or excluded.
 
@@ -215,6 +317,7 @@ docker compose run --rm app php bin/phpunit
   - Ignores `_site/`, `_config.yml`, and dotfiles by default
 - [ ] Update `site:build` to run content discovery after config loading; in verbose mode, output counts: "Found X pages, Y posts, Z layouts, W includes, N static files"
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
@@ -223,13 +326,16 @@ docker compose run --rm app php bin/phpunit tests/Content/
 
 docker compose run --rm -v /tmp/test-site:/site app php bin/console site:build --source=/site -v
 # Shows file counts per category
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Scanner correctly classifies all file types and tests pass with fixture site.
+**Done when:** Scanner correctly classifies all file types, tests pass with fixture site, and `composer lint` is clean.
 
 ---
 
-### Checkpoint 4 — Front Matter Parsing
+### Checkpoint 5 — Front Matter Parsing
 
 **Goal:** Limb extracts YAML front matter from content files, returning structured metadata and raw body separately.
 
@@ -251,18 +357,22 @@ docker compose run --rm -v /tmp/test-site:/site app php bin/console site:build -
   - Throws exception with file path and line number on invalid YAML
   - Returns empty metadata + full body if no front matter is present
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm app php bin/phpunit tests/FrontMatter/
 # All tests pass
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Parser correctly splits front matter from body in all test cases.
+**Done when:** Parser correctly splits front matter from body in all test cases. `composer lint` is clean.
 
 ---
 
-### Checkpoint 5 — Document Model
+### Checkpoint 6 — Document Model
 
 **Goal:** A unified `Document` model represents all renderable content (pages, posts, collection items) with consistent attributes.
 
@@ -309,18 +419,22 @@ docker compose run --rm app php bin/phpunit tests/FrontMatter/
   - Set `contentType` from file extension
   - Set `published` from front matter (default `true`)
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm app php bin/phpunit tests/Model/
 # All model tests pass
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Documents are constructed from scanned files with correct attributes. Post filename parsing works.
+**Done when:** Documents are constructed from scanned files with correct attributes. Post filename parsing works. `composer lint` is clean.
 
 ---
 
-### Checkpoint 6 — Markdown Rendering
+### Checkpoint 7 — Markdown Rendering
 
 **Goal:** Limb converts Markdown content to HTML using league/commonmark.
 
@@ -338,18 +452,22 @@ docker compose run --rm app php bin/phpunit tests/Model/
   - Stateless — receives Markdown, returns HTML
 - [ ] Register as a Symfony service
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm app php bin/phpunit tests/Markdown/
 # All tests pass
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Markdown converts to correct HTML in all test cases.
+**Done when:** Markdown converts to correct HTML in all test cases. `composer lint` is clean.
 
 ---
 
-### Checkpoint 7 — Data Loading
+### Checkpoint 8 — Data Loading
 
 **Goal:** Limb loads YAML and JSON files from `_data/` into a `site.data` structure accessible in templates.
 
@@ -371,18 +489,22 @@ docker compose run --rm app php bin/phpunit tests/Markdown/
   - Supports subdirectories: `_data/authors/team.yml` → `site.data.authors.team`
   - Throws on invalid YAML/JSON with file path in error
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm app php bin/phpunit tests/Data/
 # All tests pass
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Data files load into a nested array structure matching their directory/file hierarchy.
+**Done when:** Data files load into a nested array structure matching their directory/file hierarchy. `composer lint` is clean.
 
 ---
 
-### Checkpoint 8 — Permalink & Output Path Resolution
+### Checkpoint 9 — Permalink & Output Path Resolution
 
 **Goal:** Each document gets a URL and a filesystem output path based on permalink patterns.
 
@@ -417,18 +539,22 @@ docker compose run --rm app php bin/phpunit tests/Data/
   - Config-level `permalink` pattern → resolve tokens
   - Framework default (posts: `/:year/:month/:day/:title/`, pages: `/:title/`)
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm app php bin/phpunit tests/Permalink/
 # All tests pass
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Documents resolve to correct URLs and output paths per the precedence rules.
+**Done when:** Documents resolve to correct URLs and output paths per the precedence rules. `composer lint` is clean.
 
 ---
 
-### Checkpoint 9 — Twig Rendering Pipeline
+### Checkpoint 10 — Twig Rendering Pipeline
 
 **Goal:** Documents are rendered through Twig layouts with full site context. This is where content becomes HTML pages.
 
@@ -473,18 +599,22 @@ docker compose run --rm app php bin/phpunit tests/Permalink/
   - Marks collections with `output: true/false` per config
 - [ ] Wire rendering into `site:build`: after scanning, parsing, and permalink resolution, render each document and store `renderedContent` on the Document
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm app php bin/phpunit tests/Rendering/ tests/Collection/
 # All tests pass
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** A Markdown document with front matter renders into a complete HTML page wrapped in a Twig layout, with `site`, `page`, and `content` available in templates.
+**Done when:** A Markdown document with front matter renders into a complete HTML page wrapped in a Twig layout, with `site`, `page`, and `content` available in templates. `composer lint` is clean.
 
 ---
 
-### Checkpoint 10 — Output Writing & Asset Copying
+### Checkpoint 11 — Output Writing & Asset Copying
 
 **Goal:** Rendered documents are written to the destination directory. Static assets are copied.
 
@@ -510,18 +640,22 @@ docker compose run --rm app php bin/phpunit tests/Rendering/ tests/Collection/
   - Deletes the destination directory (`_site` by default)
   - Accepts `--source` and `--destination` options
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm app php bin/phpunit tests/Output/ tests/Asset/
 # All tests pass
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Documents write to correct paths and static files copy with directory structure preserved.
+**Done when:** Documents write to correct paths and static files copy with directory structure preserved. `composer lint` is clean.
 
 ---
 
-### Checkpoint 11 — Build Pipeline Integration
+### Checkpoint 12 — Build Pipeline Integration
 
 **Goal:** Wire all stages together into `BuildRunner`. The `site:build` command performs a complete build from source to output.
 
@@ -565,6 +699,7 @@ docker compose run --rm app php bin/phpunit tests/Output/ tests/Asset/
   - On warnings: output each warning, still exit 0
   - Verbose mode: list every file written
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
@@ -613,13 +748,16 @@ ls /tmp/test-site/_site/
 
 cat /tmp/test-site/_site/index.html
 # Contains: <title>Home | My Blog</title> and <h1>Welcome to my site</h1>
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** `site:build` produces a complete `_site/` directory from a source site with pages, posts, layouts, and static assets. All tests pass.
+**Done when:** `site:build` produces a complete `_site/` directory from a source site with pages, posts, layouts, and static assets. All tests pass. `composer lint` is clean.
 
 ---
 
-### Checkpoint 12 — site:init Command
+### Checkpoint 13 — site:init Command
 
 **Goal:** `site:init` scaffolds a new site directory with example content so users can get started immediately.
 
@@ -654,6 +792,7 @@ cat /tmp/test-site/_site/index.html
   - Refuses to overwrite if directory already contains `_config.yml`
   - Outputs what was created
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
@@ -662,13 +801,16 @@ docker compose run --rm app php bin/console site:init /site
 
 docker compose run --rm app php bin/console site:build --source=/site
 # Builds successfully from the scaffold
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** `site:init` creates a buildable site scaffold that `site:build` can process without errors.
+**Done when:** `site:init` creates a buildable site scaffold that `site:build` can process without errors. `composer lint` is clean.
 
 ---
 
-### Checkpoint 13 — site:serve Command
+### Checkpoint 14 — site:serve Command
 
 **Goal:** `site:serve` builds the site and starts a local development server.
 
@@ -692,19 +834,23 @@ docker compose run --rm app php bin/console site:build --source=/site
     ```
 - [ ] Manual test (no automated test for server lifecycle):
   - Init a site, build it, serve it, open in browser
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm -p 4000:4000 -v /tmp/test-site:/site app php bin/console site:serve --source=/site
 # Output: "Serving at http://0.0.0.0:4000"
 # Browser: http://localhost:4000 shows the built site
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** `site:serve` builds and serves the site. Pages are accessible in a browser.
+**Done when:** `site:serve` builds and serves the site. Pages are accessible in a browser. `composer lint` is clean.
 
 ---
 
-### Checkpoint 14 — site:doctor Command
+### Checkpoint 15 — site:doctor Command
 
 **Goal:** `site:doctor` validates a site's configuration and structure, reporting problems before build.
 
@@ -725,18 +871,22 @@ docker compose run --rm -p 4000:4000 -v /tmp/test-site:/site app php bin/console
   - Outputs OK / WARNING / ERROR for each check
   - Exit code 0 if no errors (warnings OK), exit code 1 if errors
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm -v /tmp/test-site:/site app php bin/console site:doctor --source=/site
 # Output: all checks pass (or specific warnings)
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** `site:doctor` reports config and structural issues clearly. Tests pass.
+**Done when:** `site:doctor` reports config and structural issues clearly. Tests pass. `composer lint` is clean.
 
 ---
 
-### Checkpoint 15 — Collections Support
+### Checkpoint 16 — Collections Support
 
 **Goal:** Custom collections (beyond posts) work: configured in `_config.yml`, documents loaded, rendered if `output: true`.
 
@@ -762,6 +912,7 @@ docker compose run --rm -v /tmp/test-site:/site app php bin/console site:doctor 
 - [ ] Update `DocumentRenderer` template context: `site.collections.<name>` available in Twig, each collection document's `page.collection` set correctly
 - [ ] Update `PermalinkGenerator` to use collection-level permalink patterns
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
@@ -769,13 +920,16 @@ docker compose run --rm app php bin/phpunit tests/Collection/
 # All tests pass
 
 # Manual: create a site with _docs/ collection, build, verify output
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Custom collections render at their configured permalink paths. Documents are accessible via `site.collections.X` in templates.
+**Done when:** Custom collections render at their configured permalink paths. Documents are accessible via `site.collections.X` in templates. `composer lint` is clean.
 
 ---
 
-### Checkpoint 16 — Twig Extensions & Template Polish
+### Checkpoint 17 — Twig Extensions & Template Polish
 
 **Goal:** Add project-specific Twig functions/filters that make templates practical.
 
@@ -795,18 +949,22 @@ docker compose run --rm app php bin/phpunit tests/Collection/
     - `collection(name)` — shorthand to get a collection's documents
 - [ ] Register the extension as a tagged Symfony service
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm app php bin/phpunit tests/Rendering/
 # Twig extension tests pass
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** All Twig filters and functions work and are tested. Templates can use them.
+**Done when:** All Twig filters and functions work and are tested. Templates can use them. `composer lint` is clean.
 
 ---
 
-### Checkpoint 17 — Error Handling Hardening
+### Checkpoint 18 — Error Handling Hardening
 
 **Goal:** All error cases produce actionable messages with file paths and context.
 
@@ -828,6 +986,7 @@ docker compose run --rm app php bin/phpunit tests/Rendering/
   - `OutputException`
 - [ ] Update `site:build` to catch exceptions and format them for CLI output (no raw stack traces in normal mode, stack traces in `-vvv`)
 - [ ] Run tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
@@ -835,13 +994,16 @@ docker compose run --rm app php bin/phpunit
 # All tests pass, including error-case tests
 
 # Manual: introduce a bad _config.yml, run build, verify error message is helpful
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Every known error case produces a message that tells the user exactly what's wrong and where.
+**Done when:** Every known error case produces a message that tells the user exactly what's wrong and where. `composer lint` is clean.
 
 ---
 
-### Checkpoint 18 — Full Integration Test Suite
+### Checkpoint 19 — Full Integration Test Suite
 
 **Goal:** Comprehensive fixture-based tests prove the entire pipeline works correctly.
 
@@ -864,14 +1026,18 @@ docker compose run --rm app php bin/phpunit
   - One complete fixture site with expected output committed to the repo
   - Test compares actual `_site/` output against expected output file-by-file
 - [ ] Run all tests, confirm they pass
+- [ ] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
 docker compose run --rm app php bin/phpunit tests/Integration/
 # All integration tests pass
+
+docker compose run --rm app composer lint
+# Clean
 ```
 
-**Done when:** Full test suite covers all major features with fixture sites. Golden file test confirms byte-accurate output.
+**Done when:** Full test suite covers all major features with fixture sites. Golden file test confirms byte-accurate output. `composer lint` is clean.
 
 ---
 
@@ -916,6 +1082,10 @@ test ! -d my-site/_site                          # Output directory removed
 # 8. All automated tests pass
 docker compose run --rm app php bin/phpunit
 # All tests green
+
+# 9. Code quality passes
+docker compose run --rm app composer lint
+# PHP-CS-Fixer and PHPStan both clean
 ```
 
-**The MVP is shipped when all 8 steps above succeed.**
+**The MVP is shipped when all 9 steps above succeed.**
