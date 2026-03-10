@@ -1012,24 +1012,24 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Create fixture sites in `tests/Fixtures/`:
-  - `basic-pages/` — index.md, about.md, simple layout
+- [x] Create fixture sites in `tests/Fixtures/`:
+  - `basic-pages/` — index.md, about.md, simple layout (covered by existing `basic-site/`)
   - `blog-posts/` — multiple posts, post layout, date-based permalinks
-  - `collections/` — custom collection with config
+  - `collections/` — custom collection with config (covered by existing `collections-site/`)
   - `data-files/` — `_data/` with YAML and JSON, template using `site.data`
   - `nested-layouts/` — layout that extends another layout
   - `permalink-overrides/` — documents with front matter `permalink` overrides
   - `drafts/` — drafts included/excluded based on --drafts flag
-- [ ] Write integration tests for each fixture:
+- [x] Write integration tests for each fixture:
   - Run `BuildRunner` against fixture
   - Assert specific output files exist
   - Assert output HTML contains expected content (use string matching, not DOM parsing)
   - Assert correct file counts in `BuildResult`
-- [ ] Write a "golden file" test:
+- [x] Write a "golden file" test:
   - One complete fixture site with expected output committed to the repo
   - Test compares actual `_site/` output against expected output file-by-file
-- [ ] Run all tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Run all tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
