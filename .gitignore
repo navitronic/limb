@@ -21,6 +21,7 @@
 
 ###> docker ###
 /test-site/
+/_site/
 ###< docker ###
 
 ###> friendsofphp/php-cs-fixer ###

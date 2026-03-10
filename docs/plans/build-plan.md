@@ -1067,7 +1067,7 @@ docker compose run --rm -v ./my-site:/site app php bin/console site:build --sour
 test -f my-site/_site/index.html               # Homepage exists
 test -f my-site/_site/about/index.html          # About page exists
 test -f my-site/_site/assets/css/style.css      # Static assets copied
-grep -q "My Blog" my-site/_site/index.html      # Site title rendered in layout
+grep -q "My Site" my-site/_site/index.html      # Site title rendered in layout
 
 # Find the post output (date-based path from scaffold)
 find my-site/_site -name "index.html" -path "*/welcome/*"  # Post exists at permalink path

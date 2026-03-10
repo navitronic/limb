@@ -23,8 +23,15 @@ final class ContentLocator
         $finder->files()
             ->in($sourceDir)
             ->ignoreDotFiles(true)
-            ->exclude($config->destination)
             ->notName('_config.yml');
+
+        // Exclude destination directory from scanning
+        $destExclude = $config->destination;
+        $sourcePrefix = rtrim($sourceDir, '/').'/';
+        if (str_starts_with($destExclude, $sourcePrefix)) {
+            $destExclude = substr($destExclude, \strlen($sourcePrefix));
+        }
+        $finder->exclude($destExclude);
 
         // Exclude _site and user-configured excludes
         foreach (self::DEFAULT_EXCLUDES as $exclude) {

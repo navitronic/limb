@@ -47,12 +47,20 @@ final class ConfigMerger
             $merged['source'] = $source;
         }
 
+        $source = $this->getString($merged, 'source', '/site');
+        $destination = $this->getString($merged, 'destination', '_site');
+
+        // Resolve relative destination to absolute path under source
+        if (!str_starts_with($destination, '/')) {
+            $destination = rtrim($source, '/').'/'.$destination;
+        }
+
         return new SiteConfig(
             title: $this->getString($merged, 'title', ''),
             baseUrl: $this->getString($merged, 'baseUrl', ''),
             url: $this->getString($merged, 'url', ''),
-            source: $this->getString($merged, 'source', '/site'),
-            destination: $this->getString($merged, 'destination', '_site'),
+            source: $source,
+            destination: $destination,
             layoutsDir: $this->getString($merged, 'layoutsDir', '_layouts'),
             includesDir: $this->getString($merged, 'includesDir', '_includes'),
             dataDir: $this->getString($merged, 'dataDir', '_data'),

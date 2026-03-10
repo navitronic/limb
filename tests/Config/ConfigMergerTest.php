@@ -20,7 +20,7 @@ final class ConfigMergerTest extends TestCase
         self::assertInstanceOf(SiteConfig::class, $config);
         self::assertSame('', $config->title);
         self::assertSame('', $config->baseUrl);
-        self::assertSame('_site', $config->destination);
+        self::assertSame('/site/_site', $config->destination);
         self::assertSame('_layouts', $config->layoutsDir);
         self::assertSame('_includes', $config->includesDir);
         self::assertSame('_data', $config->dataDir);
@@ -46,7 +46,7 @@ final class ConfigMergerTest extends TestCase
 
         self::assertSame('My Site', $config->title);
         self::assertSame('https://example.com', $config->baseUrl);
-        self::assertSame('output', $config->destination);
+        self::assertSame('/site/output', $config->destination);
         self::assertSame('/:title/', $config->permalink);
         // Unset values remain defaults
         self::assertSame('_layouts', $config->layoutsDir);
@@ -79,7 +79,7 @@ final class ConfigMergerTest extends TestCase
         );
 
         self::assertSame('YAML Title', $config->title);
-        self::assertSame('cli_dest', $config->destination);
+        self::assertSame('/site/cli_dest', $config->destination);
     }
 
     #[Test]
@@ -98,7 +98,7 @@ final class ConfigMergerTest extends TestCase
             // ENV overrides YAML for title
             self::assertSame('Env Title', $config->title);
             // CLI overrides YAML for destination
-            self::assertSame('cli_dest', $config->destination);
+            self::assertSame('/site/cli_dest', $config->destination);
         } finally {
             unset($_ENV['LIMB_TITLE']);
         }
