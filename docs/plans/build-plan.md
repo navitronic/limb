@@ -286,7 +286,7 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Create test fixture `tests/Fixtures/basic-site/`:
+- [x] Create test fixture `tests/Fixtures/basic-site/`:
   ```
   _config.yml
   _layouts/default.html.twig
@@ -297,13 +297,13 @@ docker compose run --rm app composer lint
   index.md
   about.md
   ```
-- [ ] Write unit tests first:
+- [x] Write unit tests first:
   - `tests/Content/ContentLocatorTest.php` — use the fixture directory
   - Test: posts detected, layouts detected, static assets detected, excluded files skipped, `_site` ignored
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Content/ContentClassification.php` — enum representing file type
-- [ ] Create `src/Content/ScanResult.php` — holds categorised file lists
-- [ ] Create `src/Content/ContentLocator.php` — service that:
+- [x] Run tests, confirm they fail
+- [x] Create `src/Content/ContentClassification.php` — enum representing file type
+- [x] Create `src/Content/ScanResult.php` — holds categorised file lists
+- [x] Create `src/Content/ContentLocator.php` — service that:
   - Uses Symfony Finder to recursively scan the source directory
   - Classifies files into categories:
     - **Layout**: files under `_layouts/` (`.html.twig`)
@@ -315,9 +315,9 @@ docker compose run --rm app composer lint
     - **Static**: everything else not in an underscore directory and not excluded
   - Respects `exclude` and `include` config arrays
   - Ignores `_site/`, `_config.yml`, and dotfiles by default
-- [ ] Update `site:build` to run content discovery after config loading; in verbose mode, output counts: "Found X pages, Y posts, Z layouts, W includes, N static files"
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Update `site:build` to run content discovery after config loading; in verbose mode, output counts: "Found X pages, Y posts, Z layouts, W includes, N static files"
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
