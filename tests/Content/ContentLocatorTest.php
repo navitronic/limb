@@ -185,4 +185,36 @@ final class ContentLocatorTest extends TestCase
             }
         }
     }
+
+    #[Test]
+    public function itDetectsCollectionFiles(): void
+    {
+        $collectionDir = \dirname(__DIR__).'/Fixtures/collections-site';
+        $config = new SiteConfig(
+            source: $collectionDir,
+            collections: [
+                'docs' => ['output' => true, 'permalink' => '/docs/:title/'],
+            ],
+        );
+
+        $locator = new ContentLocator();
+        $result = $locator->scan($config);
+
+        $collectionFiles = $result->getCollectionFiles();
+        self::assertArrayHasKey('docs', $collectionFiles);
+        self::assertCount(2, $collectionFiles['docs']);
+
+        $filenames = array_map(static fn (string $path): string => basename($path), $collectionFiles['docs']);
+        sort($filenames);
+        self::assertSame(['api-reference.md', 'getting-started.md'], $filenames);
+    }
+
+    #[Test]
+    public function itDoesNotDetectCollectionsWhenNotConfigured(): void
+    {
+        $locator = new ContentLocator();
+        $result = $locator->scan($this->createConfig());
+
+        self::assertSame([], $result->getCollectionFiles());
+    }
 }

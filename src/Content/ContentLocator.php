@@ -17,6 +17,7 @@ final class ContentLocator
     {
         $result = new ScanResult();
         $sourceDir = $config->source;
+        $collectionNames = $this->getCollectionNames($config);
 
         $finder = new Finder();
         $finder->files()
@@ -42,6 +43,17 @@ final class ContentLocator
 
             if (false === $fullPath) {
                 continue;
+            }
+
+            // Check if file belongs to a custom collection
+            $collectionName = $this->matchCollection($relativePath, $collectionNames);
+            if (null !== $collectionName) {
+                $extension = strtolower(pathinfo($relativePath, \PATHINFO_EXTENSION));
+                if (\in_array($extension, self::CONTENT_EXTENSIONS, true)) {
+                    $result->addCollectionFile($collectionName, $fullPath);
+
+                    continue;
+                }
             }
 
             $classification = $this->classify($relativePath, $config);
@@ -91,5 +103,33 @@ final class ContentLocator
 
         // Everything else in non-underscore directories is static
         return ContentClassification::Static;
+    }
+
+    /**
+     * Get collection directory names from config.
+     *
+     * @return list<string>
+     */
+    private function getCollectionNames(SiteConfig $config): array
+    {
+        return array_keys($config->collections);
+    }
+
+    /**
+     * Check if a file path belongs to a custom collection directory (_<name>/).
+     *
+     * @param list<string> $collectionNames
+     */
+    private function matchCollection(string $relativePath, array $collectionNames): ?string
+    {
+        $normalizedPath = str_replace('\\', '/', $relativePath);
+
+        foreach ($collectionNames as $name) {
+            if (str_starts_with($normalizedPath, '_'.$name.'/')) {
+                return $name;
+            }
+        }
+
+        return null;
     }
 }
