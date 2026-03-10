@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Config\ConfigLoader;
+use App\Config\ConfigMerger;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'site:build',
@@ -16,6 +19,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class SiteBuildCommand extends Command
 {
+    public function __construct(
+        private readonly ConfigLoader $configLoader,
+        private readonly ConfigMerger $configMerger,
+    ) {
+        parent::__construct();
+    }
+
     protected function configure(): void
     {
         $this
@@ -28,7 +38,41 @@ class SiteBuildCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('Limb build starting...');
+        $io = new SymfonyStyle($input, $output);
+
+        $io->text('Limb build starting...');
+
+        $source = $input->getOption('source');
+        \assert(\is_string($source));
+
+        $configPath = $input->getOption('config');
+        \assert(null === $configPath || \is_string($configPath));
+
+        $yamlConfig = $this->configLoader->load($source, $configPath);
+
+        $cliOverrides = [];
+        $destination = $input->getOption('destination');
+        if (\is_string($destination)) {
+            $cliOverrides['destination'] = $destination;
+        }
+
+        $config = $this->configMerger->merge($yamlConfig, $cliOverrides, $source);
+
+        if ($output->isVerbose()) {
+            $io->section('Configuration');
+            $io->listing([
+                \sprintf('title = "%s"', $config->title),
+                \sprintf('baseUrl = "%s"', $config->baseUrl),
+                \sprintf('source = "%s"', $config->source),
+                \sprintf('destination = "%s"', $config->destination),
+                \sprintf('permalink = "%s"', $config->permalink),
+                \sprintf('timezone = "%s"', $config->timezone),
+                \sprintf('layoutsDir = "%s"', $config->layoutsDir),
+                \sprintf('includesDir = "%s"', $config->includesDir),
+                \sprintf('dataDir = "%s"', $config->dataDir),
+                \sprintf('postsDir = "%s"', $config->postsDir),
+            ]);
+        }
 
         return Command::SUCCESS;
     }

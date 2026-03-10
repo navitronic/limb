@@ -232,11 +232,11 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write unit tests first:
+- [x] Write unit tests first:
   - `tests/Config/ConfigLoaderTest.php` — valid YAML, invalid YAML, missing file
   - `tests/Config/ConfigMergerTest.php` — merge precedence (defaults < config < env < CLI)
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Config/SiteConfig.php` — a value object holding:
+- [x] Run tests, confirm they fail
+- [x] Create `src/Config/SiteConfig.php` — a value object holding:
   - `title` (string), `baseUrl` (string), `url` (string)
   - `source` (string), `destination` (string, default `_site`)
   - `layoutsDir` (string, default `_layouts`), `includesDir` (string, default `_includes`)
@@ -245,20 +245,20 @@ docker compose run --rm app composer lint
   - `permalink` (string, default `/:year/:month/:day/:title/`)
   - `timezone` (string, default `UTC`)
   - `exclude` (string[]), `include` (string[])
-- [ ] Create `src/Config/ConfigLoader.php` — service that:
+- [x] Create `src/Config/ConfigLoader.php` — service that:
   - Reads `_config.yml` from the source path
   - Returns parsed YAML array
   - Throws clear exception with file path if YAML is invalid
-- [ ] Create `src/Config/ConfigMerger.php` — service that:
+- [x] Create `src/Config/ConfigMerger.php` — service that:
   - Starts with hardcoded framework defaults
   - Merges `_config.yml` values on top
   - Applies environment variable overrides (`LIMB_TITLE`, `LIMB_BASE_URL`, etc.)
   - Applies CLI flag overrides
   - Returns a `SiteConfig` instance
-- [ ] Register services in `config/services.yaml`
-- [ ] Update `site:build` to load and merge config, output resolved config values in verbose mode
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Register services in `config/services.yaml`
+- [x] Update `site:build` to load and merge config, output resolved config values in verbose mode
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
