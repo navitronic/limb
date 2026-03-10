@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ page.title }}</title></head>
+<body>
+<div class="data-content">
+{{ content|raw }}
+<p>Site name: {{ site.data.settings.site_name }}</p>
+<p>Tagline: {{ site.data.settings.tagline }}</p>
+<ul>
+{% for author in site.data.authors %}
+<li>{{ author.name }} ({{ author.role }})</li>
+{% endfor %}
+</ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,3 @@
+title: "Blog Test"
+url: "https://blog.example.com"
+permalink: "/:year/:month/:day/:title/"
