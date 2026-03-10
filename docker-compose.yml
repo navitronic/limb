@@ -7,3 +7,5 @@ services:
       - .:/app
       - ./test-site:/site
     command: php bin/console
+    ports:
+      - "4000:4000"
