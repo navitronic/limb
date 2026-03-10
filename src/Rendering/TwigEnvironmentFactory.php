@@ -13,9 +13,10 @@ final class TwigEnvironmentFactory
     /**
      * Create a Twig Environment configured for site rendering.
      *
-     * Sets up filesystem loaders for layouts and includes directories.
+     * Sets up filesystem loaders for layouts and includes directories,
+     * and registers project-specific Twig filters and functions.
      */
-    public function create(string $sourceDir): Environment
+    public function create(string $sourceDir, string $baseUrl = '', string $siteUrl = ''): Environment
     {
         $layoutsDir = $sourceDir.'/_layouts';
         $includesDir = $sourceDir.'/_includes';
@@ -32,9 +33,13 @@ final class TwigEnvironmentFactory
 
         $chainLoader = new ChainLoader([$loader]);
 
-        return new Environment($chainLoader, [
+        $env = new Environment($chainLoader, [
             'autoescape' => 'html',
             'strict_variables' => false,
         ]);
+
+        $env->addExtension(new LimbTwigExtension($baseUrl, $siteUrl));
+
+        return $env;
     }
 }
