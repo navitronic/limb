@@ -378,11 +378,11 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write unit tests first:
+- [x] Write unit tests first:
   - `tests/Model/DocumentFactoryTest.php` — post filename parsing, page creation, front matter attribute mapping
   - Verify date extraction from `2026-03-10-my-post.md` → date=2026-03-10, slug=my-post
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Model/Document.php` — value object / entity:
+- [x] Run tests, confirm they fail
+- [x] Create `src/Model/Document.php` — value object / entity:
   - `sourcePath` (string) — absolute path to source file
   - `relativePath` (string) — relative to site root
   - `frontMatter` (array) — parsed YAML metadata
@@ -397,29 +397,29 @@ docker compose run --rm app composer lint
   - `date` (?\DateTimeInterface) — from filename or front matter
   - `slug` (string) — from filename or front matter `slug` key
   - `title` (string) — from front matter `title` key
-- [ ] Create `src/Model/Site.php` — holds the full site model:
+- [x] Create `src/Model/Site.php` — holds the full site model:
   - `config` (SiteConfig)
   - `pages` (Document[])
   - `posts` (Document[])
   - `collections` (array<string, Collection>)
   - `data` (array) — loaded from `_data/`
   - `staticAssets` (string[]) — relative paths of static files
-- [ ] Create `src/Model/Collection.php`:
+- [x] Create `src/Model/Collection.php`:
   - `name` (string)
   - `documents` (Document[])
   - `permalink` (?string) — collection-level permalink pattern
   - `output` (bool) — whether to render collection documents
-- [ ] Create `src/Model/BuildResult.php`:
+- [x] Create `src/Model/BuildResult.php`:
   - `pagesRendered` (int), `postsRendered` (int), `staticFilesCopied` (int)
   - `errors` (string[]), `warnings` (string[])
   - `elapsedTime` (float)
-- [ ] Create a `DocumentFactory` or builder method that takes a `ScanResult` file + `ParsedContent` and produces a `Document`:
+- [x] Create a `DocumentFactory` or builder method that takes a `ScanResult` file + `ParsedContent` and produces a `Document`:
   - Infer `date` and `slug` from post filenames (`YYYY-MM-DD-slug.md`)
   - Set `collection` based on source directory
   - Set `contentType` from file extension
   - Set `published` from front matter (default `true`)
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
