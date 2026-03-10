@@ -341,23 +341,23 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write unit tests first (`tests/FrontMatter/FrontMatterParserTest.php`):
+- [x] Write unit tests first (`tests/FrontMatter/FrontMatterParserTest.php`):
   - Valid front matter with various YAML types (strings, arrays, booleans, dates)
   - No front matter → empty metadata, full body
   - Invalid YAML → clear exception with context
   - Empty front matter (`---\n---`) → empty metadata, empty body
   - Front matter with `---` inside body content (only first block is front matter)
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/FrontMatter/ParsedContent.php` — value object: `metadata` (array), `body` (string), `hasFrontMatter` (bool)
-- [ ] Create `src/FrontMatter/FrontMatterParser.php` — service that:
+- [x] Run tests, confirm they fail
+- [x] Create `src/FrontMatter/ParsedContent.php` — value object: `metadata` (array), `body` (string), `hasFrontMatter` (bool)
+- [x] Create `src/FrontMatter/FrontMatterParser.php` — service that:
   - Detects `---` delimited front matter block at the start of a file
   - Extracts YAML between the delimiters
   - Parses YAML into an associative array
   - Returns a `ParsedContent` with `metadata` (array) and `body` (string)
   - Throws exception with file path and line number on invalid YAML
   - Returns empty metadata + full body if no front matter is present
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
