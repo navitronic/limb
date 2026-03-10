@@ -939,9 +939,9 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write unit tests first for each filter and function
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Rendering/LimbTwigExtension.php` (Symfony-registered Twig extension):
+- [x] Write unit tests first for each filter and function
+- [x] Run tests, confirm they fail
+- [x] Create `src/Rendering/LimbTwigExtension.php` (Symfony-registered Twig extension):
   - **Filters:**
     - `date_to_string` — format a date for display (e.g. `page.date|date_to_string` → "10 Mar 2026")
     - `slugify` — convert string to URL slug
@@ -950,10 +950,9 @@ docker compose run --rm app composer lint
   - **Functions:**
     - `asset_url(path)` — prepend `site.baseUrl` to an asset path
     - `absolute_url(path)` — prepend `site.url` + `site.baseUrl` to a path
-    - `collection(name)` — shorthand to get a collection's documents
-- [ ] Register the extension as a tagged Symfony service
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Register the extension in `TwigEnvironmentFactory`
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash

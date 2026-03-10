@@ -121,7 +121,7 @@ final class BuildRunner
 
         $this->eventDispatcher->dispatch(new SiteLoadedEvent($site));
 
-        $twig = $this->twigEnvironmentFactory->create($config->source);
+        $twig = $this->twigEnvironmentFactory->create($config->source, $config->baseUrl, $config->url);
         $renderer = new DocumentRenderer($twig, $this->markdownRenderer);
 
         $this->eventDispatcher->dispatch(new BeforeRenderEvent($allDocuments, $site));
