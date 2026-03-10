@@ -6,6 +6,8 @@ namespace App\Command;
 
 use App\Config\ConfigLoader;
 use App\Config\ConfigMerger;
+use App\Content\ContentClassification;
+use App\Content\ContentLocator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,6 +24,7 @@ class SiteBuildCommand extends Command
     public function __construct(
         private readonly ConfigLoader $configLoader,
         private readonly ConfigMerger $configMerger,
+        private readonly ContentLocator $contentLocator,
     ) {
         parent::__construct();
     }
@@ -71,6 +74,20 @@ class SiteBuildCommand extends Command
                 \sprintf('includesDir = "%s"', $config->includesDir),
                 \sprintf('dataDir = "%s"', $config->dataDir),
                 \sprintf('postsDir = "%s"', $config->postsDir),
+            ]);
+        }
+
+        // Content discovery
+        $scanResult = $this->contentLocator->scan($config);
+
+        if ($output->isVerbose()) {
+            $io->section('Content Discovery');
+            $io->listing([
+                \sprintf('Found %d pages', $scanResult->countByClassification(ContentClassification::Page)),
+                \sprintf('Found %d posts', $scanResult->countByClassification(ContentClassification::Post)),
+                \sprintf('Found %d layouts', $scanResult->countByClassification(ContentClassification::Layout)),
+                \sprintf('Found %d includes', $scanResult->countByClassification(ContentClassification::Include)),
+                \sprintf('Found %d static files', $scanResult->countByClassification(ContentClassification::Static)),
             ]);
         }
 
