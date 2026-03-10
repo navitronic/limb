@@ -473,23 +473,23 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Add fixture data files to `tests/Fixtures/basic-site/_data/`
-- [ ] Write unit tests first (`tests/Data/DataLoaderTest.php`):
+- [x] Add fixture data files to `tests/Fixtures/basic-site/_data/`
+- [x] Write unit tests first (`tests/Data/DataLoaderTest.php`):
   - Single YAML file
   - Multiple files
   - Nested directories
   - JSON file
   - Invalid YAML → clear error
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Data/DataLoader.php` — service that:
+- [x] Run tests, confirm they fail
+- [x] Create `src/Data/DataLoader.php` — service that:
   - Scans `_data/` directory
   - Parses `.yml`/`.yaml` files via Symfony YAML
   - Parses `.json` files via `json_decode`
   - Builds a nested associative array keyed by filename (without extension)
   - Supports subdirectories: `_data/authors/team.yml` → `site.data.authors.team`
   - Throws on invalid YAML/JSON with file path in error
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
