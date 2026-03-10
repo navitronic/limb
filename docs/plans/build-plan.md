@@ -560,27 +560,31 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write unit tests first:
+- [x] Write unit tests first:
   - `tests/Rendering/DocumentRendererTest.php`:
     - Markdown document with layout → full HTML page
     - HTML document with layout → full HTML page
     - Document without layout → just rendered content
     - Missing layout → clear error
-  - `tests/Rendering/LayoutResolverTest.php`:
-    - Known layout → correct path
-    - Unknown layout → exception with helpful message
+    - Site context available in templates
+    - Layout chaining (post → default)
+  - `tests/Collection/CollectionBuilderTest.php`:
+    - Groups documents by collection
+    - Sorts posts by date newest first
+    - Returns empty array when no collections
+    - Ignores documents with no collection
+    - Sets output flag from config
+    - Sets permalink from config
+    - Creates Collection model instances
   - Use fixture layouts in `tests/Fixtures/basic-site/_layouts/`
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Rendering/TwigEnvironmentFactory.php` — service/factory that:
+- [x] Run tests, confirm they fail
+- [x] Create `src/Rendering/TwigEnvironmentFactory.php` — service/factory that:
   - Creates a Twig Environment
   - Registers a filesystem loader with two namespaces:
     - `@layouts` → `<source>/_layouts/`
     - `@includes` → `<source>/_includes/`
   - Enables auto-escaping for HTML
-- [ ] Create `src/Rendering/LayoutResolver.php` — service that:
-  - Given a layout name (e.g. `default`), resolves to `@layouts/default.html.twig`
-  - Validates the layout file exists, throws clear error if missing (with document path and layout name)
-- [ ] Create `src/Rendering/DocumentRenderer.php` — service that:
+- [x] Create `src/Rendering/DocumentRenderer.php` — service that:
   - Takes a `Document` and a `Site` model
   - If document is Markdown: converts body via `MarkdownRenderer` → HTML
   - If document is HTML: uses body as-is
@@ -590,16 +594,17 @@ docker compose run --rm app composer lint
     - `content` — the rendered body HTML
   - If document has a layout: renders the layout template with context
   - If no layout: rendered content is the final output
-  - Supports layout chaining: a layout can declare its own `layout` in its front matter (via Twig `extends`)
+  - Supports layout chaining: a layout can declare its own `layout` in its front matter (Jekyll-style recursive chain)
+  - Layout resolution built-in: validates layout exists, throws clear error if missing
   - Returns rendered HTML string
-- [ ] Create `src/Collection/CollectionBuilder.php` — service that:
+- [x] Create `src/Collection/CollectionBuilder.php` — service that:
   - Groups documents by collection name
   - Sorts posts by date (newest first)
   - Creates `Collection` model instances
   - Marks collections with `output: true/false` per config
-- [ ] Wire rendering into `site:build`: after scanning, parsing, and permalink resolution, render each document and store `renderedContent` on the Document
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Wire rendering into `site:build`: after scanning, parsing, and permalink resolution, render each document and store `renderedContent` on the Document
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
