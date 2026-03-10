@@ -95,8 +95,11 @@ final class BuildRunner
         // 4. Load data files
         $data = $this->dataLoader->load($config->source.'/'.$config->dataDir);
 
+        // 5. Create collection documents
+        $collectionDocuments = $this->createCollectionDocuments($scanResult->getCollectionFiles(), $config);
+
         // 6. Build collections
-        $allDocuments = array_merge($pages, $posts);
+        $allDocuments = array_merge($pages, $posts, $collectionDocuments);
         $collections = $this->collectionBuilder->build($allDocuments, $config);
 
         // 7. Compute URLs and output paths
@@ -192,10 +195,53 @@ final class BuildRunner
             return $config->permalink;
         }
 
+        // Custom collection with configured permalink
+        if (null !== $doc->collection && isset($config->collections[$doc->collection])) {
+            $collectionConfig = $config->collections[$doc->collection];
+            if (\is_array($collectionConfig) && isset($collectionConfig['permalink']) && \is_string($collectionConfig['permalink'])) {
+                return $collectionConfig['permalink'];
+            }
+        }
+
         if ('index' === $doc->slug) {
             return '/';
         }
 
         return '/'.$doc->slug.'/';
+    }
+
+    /**
+     * @param array<string, list<string>> $collectionFiles
+     *
+     * @return Document[]
+     */
+    private function createCollectionDocuments(array $collectionFiles, SiteConfig $config): array
+    {
+        $documents = [];
+
+        foreach ($collectionFiles as $collectionName => $paths) {
+            $collectionConfig = $config->collections[$collectionName] ?? [];
+            $output = true;
+            if (\is_array($collectionConfig) && isset($collectionConfig['output']) && \is_bool($collectionConfig['output'])) {
+                $output = $collectionConfig['output'];
+            }
+
+            if (!$output) {
+                continue;
+            }
+
+            foreach ($paths as $absolutePath) {
+                $content = file_get_contents($absolutePath);
+                if (false === $content) {
+                    continue;
+                }
+
+                $relativePath = basename(\dirname($absolutePath)).'/'.basename($absolutePath);
+                $parsed = $this->frontMatterParser->parse($content, $absolutePath);
+                $documents[] = $this->documentFactory->createCollectionDocument($absolutePath, $relativePath, $parsed, $collectionName);
+            }
+        }
+
+        return $documents;
     }
 }

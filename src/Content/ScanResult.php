@@ -9,9 +9,25 @@ final class ScanResult
     /** @var array<string, list<string>> */
     private array $files = [];
 
+    /** @var array<string, list<string>> collection name => file paths */
+    private array $collectionFiles = [];
+
     public function add(ContentClassification $classification, string $path): void
     {
         $this->files[$classification->value][] = $path;
+    }
+
+    public function addCollectionFile(string $collectionName, string $path): void
+    {
+        $this->collectionFiles[$collectionName][] = $path;
+    }
+
+    /**
+     * @return array<string, list<string>>
+     */
+    public function getCollectionFiles(): array
+    {
+        return $this->collectionFiles;
     }
 
     /**

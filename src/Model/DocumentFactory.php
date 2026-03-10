@@ -70,6 +70,23 @@ final class DocumentFactory
         );
     }
 
+    public function createCollectionDocument(string $sourcePath, string $relativePath, ParsedContent $parsed, string $collectionName): Document
+    {
+        return new Document(
+            sourcePath: $sourcePath,
+            relativePath: $relativePath,
+            frontMatter: $parsed->metadata,
+            rawContent: $parsed->body,
+            contentType: $this->resolveContentType($sourcePath),
+            title: $this->resolveString($parsed->metadata, 'title'),
+            slug: $this->resolveSlug($parsed->metadata, $sourcePath),
+            published: $this->resolvePublished($parsed->metadata),
+            layoutName: $this->resolveNullableString($parsed->metadata, 'layout'),
+            collection: $collectionName,
+            date: $this->resolveDate($parsed->metadata, null),
+        );
+    }
+
     private function resolveContentType(string $sourcePath): string
     {
         $ext = strtolower(pathinfo($sourcePath, \PATHINFO_EXTENSION));

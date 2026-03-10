@@ -1,0 +1,6 @@
+title: Collections Test
+url: http://localhost
+collections:
+  docs:
+    output: true
+    permalink: /docs/:title/

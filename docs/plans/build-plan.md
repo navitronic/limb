@@ -896,12 +896,12 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Add `tests/Fixtures/collections-site/` fixture with `_docs/` directory
-- [ ] Write tests first:
-  - `tests/Collection/CollectionBuilderTest.php` — custom collection loaded, sorted
-  - Integration test: collection documents render at correct URLs
-- [ ] Run tests, confirm they fail
-- [ ] Update `ConfigLoader` to parse `collections` config:
+- [x] Add `tests/Fixtures/collections-site/` fixture with `_docs/` directory
+- [x] Write tests first:
+  - `tests/Content/ContentLocatorTest.php` — collection files detected from `_docs/` directory
+  - `tests/Integration/CollectionBuildTest.php` — collection documents render at correct URLs
+- [x] Run tests, confirm they fail
+- [x] Update `ConfigLoader` to parse `collections` config:
   ```yaml
   collections:
     docs:
@@ -911,12 +911,12 @@ docker compose run --rm app composer lint
       output: true
       permalink: /team/:title/
   ```
-- [ ] Update `ContentLocator` to detect `_<collection_name>/` directories for configured collections and classify files as collection documents
-- [ ] Update `CollectionBuilder` to create `Collection` instances for each configured collection and sort documents (by date if available, then by title)
-- [ ] Update `DocumentRenderer` template context: `site.collections.<name>` available in Twig, each collection document's `page.collection` set correctly
-- [ ] Update `PermalinkGenerator` to use collection-level permalink patterns
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Update `ContentLocator` to detect `_<collection_name>/` directories for configured collections and classify files as collection documents
+- [x] Update `CollectionBuilder` to create `Collection` instances for each configured collection and sort documents (by date if available, then by title)
+- [x] Update `DocumentRenderer` template context: `site.collections.<name>` available in Twig, each collection document's `page.collection` set correctly
+- [x] Update `PermalinkGenerator` to use collection-level permalink patterns
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
