@@ -440,19 +440,19 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write unit tests first (`tests/Markdown/MarkdownRendererTest.php`):
+- [x] Write unit tests first (`tests/Markdown/MarkdownRendererTest.php`):
   - Basic Markdown (headings, paragraphs, lists, links, code blocks)
   - Empty input → empty output
   - HTML passthrough (HTML in Markdown source should be preserved)
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Markdown/MarkdownRenderer.php` — service that:
+- [x] Run tests, confirm they fail
+- [x] Create `src/Markdown/MarkdownRenderer.php` — service that:
   - Wraps `league/commonmark` `CommonMarkConverter` (or `MarkdownConverter` with `CommonMarkCoreExtension`)
   - Converts Markdown string to HTML string
   - Configurable (later) for extensions like tables, autolinks, etc.
   - Stateless — receives Markdown, returns HTML
-- [ ] Register as a Symfony service
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Register as a Symfony service
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
