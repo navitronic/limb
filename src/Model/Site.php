@@ -13,7 +13,7 @@ final class Site
      * @param Document[]                $posts
      * @param array<string, Collection> $collections
      * @param array<string, mixed>      $data
-     * @param string[]                  $staticAssets
+     * @param list<string>              $staticAssets
      */
     public function __construct(
         public readonly SiteConfig $config,

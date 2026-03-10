@@ -52,7 +52,7 @@ final class DocumentRendererTest extends TestCase
         $html = $this->renderer->render($doc, $this->site);
 
         self::assertStringContainsString('<!DOCTYPE html>', $html);
-        self::assertStringContainsString('<title>Test Site</title>', $html);
+        self::assertStringContainsString('<title>About | Test Site</title>', $html);
         self::assertStringContainsString('<h1>About Us</h1>', $html);
     }
 
@@ -134,7 +134,7 @@ final class DocumentRendererTest extends TestCase
 
         $html = $this->renderer->render($doc, $this->site);
 
-        self::assertStringContainsString('<title>Test Site</title>', $html);
+        self::assertStringContainsString('<title>Test | Test Site</title>', $html);
     }
 
     #[Test]
