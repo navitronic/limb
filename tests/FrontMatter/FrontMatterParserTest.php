@@ -67,8 +67,8 @@ final class FrontMatterParserTest extends TestCase
             Body content.
             MD;
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageMatches('/Invalid YAML.*test\.md/');
+        $this->expectException(\App\Exception\FrontMatterException::class);
+        $this->expectExceptionMessageMatches('/Invalid YAML.*front matter.*test\.md/');
         $this->parser->parse($content, 'test.md');
     }
 

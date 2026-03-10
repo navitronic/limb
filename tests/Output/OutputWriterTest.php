@@ -73,7 +73,7 @@ final class OutputWriterTest extends TestCase
 
         $writer = new OutputWriter();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\App\Exception\OutputException::class);
         $this->expectExceptionMessageMatches('/duplicate.*output.*path/i');
         $writer->write($docs);
     }

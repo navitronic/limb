@@ -126,6 +126,16 @@ final class PermalinkGeneratorTest extends TestCase
         self::assertSame('/guide/', $url);
     }
 
+    #[Test]
+    public function itThrowsOnUnknownToken(): void
+    {
+        $doc = $this->createPage('about');
+
+        $this->expectException(\App\Exception\ConfigException::class);
+        $this->expectExceptionMessageMatches('/Unknown permalink token.*:author/');
+        $this->generator->generate($doc, '/:author/:title/');
+    }
+
     private function createPost(string $date, string $slug): Document
     {
         $dateObj = \DateTimeImmutable::createFromFormat('Y-m-d', $date);

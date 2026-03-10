@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Markdown;
 
+use App\Exception\RenderException;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Exception\CommonMarkException;
 
@@ -31,7 +32,7 @@ final class MarkdownRenderer
         try {
             return $this->converter->convert($markdown)->getContent();
         } catch (CommonMarkException $e) {
-            throw new \RuntimeException(\sprintf('Failed to render Markdown: %s', $e->getMessage()), 0, $e);
+            throw new RenderException(\sprintf('Failed to render Markdown: %s', $e->getMessage()), 0, $e);
         }
     }
 }

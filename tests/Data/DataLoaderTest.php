@@ -82,7 +82,7 @@ final class DataLoaderTest extends TestCase
 
         try {
             $loader = new DataLoader();
-            $this->expectException(\RuntimeException::class);
+            $this->expectException(\App\Exception\ConfigException::class);
             $this->expectExceptionMessageMatches('/Failed to parse data file/');
             $loader->load($tmpDir);
         } finally {
@@ -100,7 +100,7 @@ final class DataLoaderTest extends TestCase
 
         try {
             $loader = new DataLoader();
-            $this->expectException(\RuntimeException::class);
+            $this->expectException(\App\Exception\ConfigException::class);
             $this->expectExceptionMessageMatches('/Failed to parse data file/');
             $loader->load($tmpDir);
         } finally {

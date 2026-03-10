@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Output;
 
+use App\Exception\OutputException;
 use App\Model\Document;
 
 final class OutputWriter
@@ -13,7 +14,7 @@ final class OutputWriter
      *
      * @param Document[] $documents
      *
-     * @throws \RuntimeException if duplicate output paths are detected
+     * @throws OutputException if duplicate output paths are detected
      */
     public function write(array $documents): int
     {
@@ -52,7 +53,7 @@ final class OutputWriter
 
             $path = $doc->outputPath;
             if (isset($seen[$path])) {
-                throw new \RuntimeException(\sprintf(
+                throw new OutputException(\sprintf(
                     'Duplicate output path "%s" from "%s" and "%s".',
                     $path,
                     $seen[$path],

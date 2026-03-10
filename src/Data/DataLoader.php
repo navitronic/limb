@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data;
 
+use App\Exception\ConfigException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
@@ -63,7 +64,7 @@ final class DataLoader
         try {
             $parsed = Yaml::parseFile($absolutePath);
         } catch (ParseException $e) {
-            throw new \RuntimeException(\sprintf('Failed to parse data file "%s": %s', $relativePath, $e->getMessage()), 0, $e);
+            throw new ConfigException(\sprintf('Failed to parse data file "%s": %s', $relativePath, $e->getMessage()), 0, $e);
         }
 
         if (!\is_array($parsed)) {
@@ -84,13 +85,13 @@ final class DataLoader
         $contents = file_get_contents($absolutePath);
 
         if (false === $contents) {
-            throw new \RuntimeException(\sprintf('Failed to read data file "%s"', $relativePath));
+            throw new ConfigException(\sprintf('Failed to read data file "%s"', $relativePath));
         }
 
         try {
             $parsed = json_decode($contents, true, 512, \JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            throw new \RuntimeException(\sprintf('Failed to parse data file "%s": %s', $relativePath, $e->getMessage()), 0, $e);
+            throw new ConfigException(\sprintf('Failed to parse data file "%s": %s', $relativePath, $e->getMessage()), 0, $e);
         }
 
         if (!\is_array($parsed)) {

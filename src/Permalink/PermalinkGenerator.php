@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Permalink;
 
+use App\Exception\ConfigException;
 use App\Model\Document;
 
 final class PermalinkGenerator
@@ -31,6 +32,27 @@ final class PermalinkGenerator
             ':collection' => $doc->collection ?? '',
         ];
 
+        $this->validateTokens($pattern, array_keys($tokens));
+
         return str_replace(array_keys($tokens), array_values($tokens), $pattern);
+    }
+
+    /**
+     * @param list<string> $validTokens
+     */
+    private function validateTokens(string $pattern, array $validTokens): void
+    {
+        preg_match_all('/:[a-z_]+/', $pattern, $matches);
+
+        foreach ($matches[0] as $token) {
+            if (!\in_array($token, $validTokens, true)) {
+                throw new ConfigException(\sprintf(
+                    'Unknown permalink token "%s" in pattern "%s". Valid tokens: %s',
+                    $token,
+                    $pattern,
+                    implode(', ', $validTokens),
+                ));
+            }
+        }
     }
 }

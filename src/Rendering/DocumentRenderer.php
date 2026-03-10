@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Rendering;
 
+use App\Exception\RenderException;
 use App\FrontMatter\FrontMatterParser;
 use App\Markdown\MarkdownRenderer;
 use App\Model\Document;
@@ -59,7 +60,7 @@ final class DocumentRenderer
 
         while (null !== $layoutName) {
             if ($depth >= self::MAX_LAYOUT_DEPTH) {
-                throw new \RuntimeException(\sprintf(
+                throw new RenderException(\sprintf(
                     'Layout chain exceeded maximum depth of %d for document "%s". Check for circular layout references.',
                     self::MAX_LAYOUT_DEPTH,
                     $doc->relativePath,
@@ -98,7 +99,7 @@ final class DocumentRenderer
         try {
             $source = $this->twig->getLoader()->getSourceContext($templateRef);
         } catch (\Exception $e) {
-            throw new \RuntimeException(\sprintf(
+            throw new RenderException(\sprintf(
                 'Layout "%s" not found for document "%s": %s',
                 $layoutName,
                 $documentPath,

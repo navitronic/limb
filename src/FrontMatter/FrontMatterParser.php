@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\FrontMatter;
 
+use App\Exception\FrontMatterException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -70,7 +71,7 @@ final class FrontMatterParser
         try {
             $parsed = Yaml::parse($trimmed);
         } catch (ParseException $e) {
-            throw new \RuntimeException(\sprintf('Invalid YAML in front matter of "%s": %s', $filePath, $e->getMessage()), 0, $e);
+            throw new FrontMatterException(\sprintf('Invalid YAML in front matter of "%s": %s', $filePath, $e->getMessage()), 0, $e);
         }
 
         if (!\is_array($parsed)) {

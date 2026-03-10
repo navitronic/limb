@@ -51,12 +51,22 @@ class SiteBuildCommand extends Command
 
         $includeDrafts = (bool) $input->getOption('drafts');
 
-        $result = $this->buildRunner->build(
-            sourceDir: $source,
-            destinationDir: $destination,
-            configPath: $configPath,
-            includeDrafts: $includeDrafts,
-        );
+        try {
+            $result = $this->buildRunner->build(
+                sourceDir: $source,
+                destinationDir: $destination,
+                configPath: $configPath,
+                includeDrafts: $includeDrafts,
+            );
+        } catch (\RuntimeException $e) {
+            $io->error($e->getMessage());
+
+            if ($output->isVeryVerbose()) {
+                $io->text((string) $e);
+            }
+
+            return Command::FAILURE;
+        }
 
         if ([] !== $result->errors) {
             foreach ($result->errors as $error) {
