@@ -860,10 +860,10 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write tests first:
+- [x] Write tests first:
   - `tests/Command/SiteDoctorCommandTest.php` — fixture with known issues (missing layout, bad filename), assert correct diagnostics
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Command/SiteDoctorCommand.php`:
+- [x] Run tests, confirm they fail
+- [x] Create `src/Command/SiteDoctorCommand.php`:
   - Accepts `--source`
   - Runs checks:
     - `_config.yml` exists and is valid YAML
@@ -874,8 +874,8 @@ docker compose run --rm app composer lint
     - Permalink patterns contain only known tokens
   - Outputs OK / WARNING / ERROR for each check
   - Exit code 0 if no errors (warnings OK), exit code 1 if errors
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
