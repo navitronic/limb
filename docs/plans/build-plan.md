@@ -820,7 +820,7 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Create `src/Command/SiteServeCommand.php`:
+- [x] Create `src/Command/SiteServeCommand.php`:
   - Accepts `--source`, `--host` (default `0.0.0.0`), `--port` (default `4000`)
   - Runs `BuildRunner` to build the site
   - Starts PHP's built-in web server on the `_site/` output directory:
@@ -830,15 +830,15 @@ docker compose run --rm app composer lint
   - Uses `Process` component to manage the server process
   - Outputs the URL where the site is accessible
   - Handles SIGINT for clean shutdown
-- [ ] Update `docker-compose.yml`:
+- [x] Update `docker-compose.yml`:
   - Add port mapping for the serve command (e.g. `4000:4000`)
   - Add a `serve` service profile or document usage:
     ```bash
     docker compose run --rm -p 4000:4000 app php bin/console site:serve --source=/site
     ```
-- [ ] Manual test (no automated test for server lifecycle):
+- [x] Manual test (no automated test for server lifecycle):
   - Init a site, build it, serve it, open in browser
-- [ ] Run `composer lint` — confirm clean
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
