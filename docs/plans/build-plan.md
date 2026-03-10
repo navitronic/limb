@@ -665,7 +665,7 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write integration test first:
+- [x] Write integration test first:
   - `tests/Integration/BuildRunnerTest.php`:
     - Uses `tests/Fixtures/basic-site/` fixture
     - Runs `BuildRunner` against it
@@ -673,8 +673,8 @@ docker compose run --rm app composer lint
     - Asserts `_site/assets/style.css` exists (static asset copied)
     - Asserts post output exists at correct permalink path
     - Asserts `BuildResult` counts are correct
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Pipeline/BuildRunner.php` — the orchestrator service:
+- [x] Run tests, confirm they fail
+- [x] Create `src/Pipeline/BuildRunner.php` — the orchestrator service:
   - Executes the full pipeline in order:
     1. Load configuration (`ConfigLoader` + `ConfigMerger`)
     2. Scan site files (`ContentLocator`)
@@ -690,20 +690,20 @@ docker compose run --rm app composer lint
   - Collects errors and warnings throughout
   - Measures elapsed time
   - Returns `BuildResult`
-- [ ] Create `src/Event/` lifecycle events (dispatched via Symfony EventDispatcher):
+- [x] Create `src/Event/` lifecycle events (dispatched via Symfony EventDispatcher):
   - `SiteLoadedEvent` — after config + scan complete, before rendering
   - `BeforeRenderEvent` — before document rendering begins
   - `AfterRenderEvent` — after all documents rendered
   - `BuildCompleteEvent` — after output written, carries `BuildResult`
-- [ ] Update `src/Command/SiteBuildCommand.php`:
+- [x] Update `src/Command/SiteBuildCommand.php`:
   - Inject `BuildRunner`
   - Pass CLI options through to config (--source, --destination, --config, --drafts, --future)
   - Output build report: pages rendered, posts rendered, static files copied, elapsed time
   - On errors: output each error, exit code 1
   - On warnings: output each warning, still exit 0
   - Verbose mode: list every file written
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
