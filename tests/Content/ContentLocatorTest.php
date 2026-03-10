@@ -55,8 +55,10 @@ final class ContentLocatorTest extends TestCase
         $result = $locator->scan($this->createConfig());
 
         $layouts = $result->getByClassification(ContentClassification::Layout);
-        self::assertCount(1, $layouts);
-        self::assertStringContainsString('default.html.twig', $layouts[0]);
+        self::assertCount(2, $layouts);
+        $layoutNames = array_map(static fn (string $path): string => basename($path), $layouts);
+        sort($layoutNames);
+        self::assertSame(['default.html.twig', 'post.html.twig'], $layoutNames);
     }
 
     #[Test]
@@ -77,8 +79,10 @@ final class ContentLocatorTest extends TestCase
         $result = $locator->scan($this->createConfig());
 
         $data = $result->getByClassification(ContentClassification::Data);
-        self::assertCount(1, $data);
-        self::assertStringContainsString('navigation.yml', $data[0]);
+        self::assertCount(3, $data);
+        $dataNames = array_map(static fn (string $path): string => basename($path), $data);
+        sort($dataNames);
+        self::assertContains('navigation.yml', $dataNames);
     }
 
     #[Test]
