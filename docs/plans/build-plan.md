@@ -625,27 +625,26 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write unit tests first:
-  - `tests/Output/OutputWriterTest.php` — writes files, creates directories, detects duplicates
-  - `tests/Asset/AssetCopierTest.php` — copies files, preserves structure, skips excluded
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Output/OutputWriter.php` — service that:
+- [x] Write unit tests first:
+  - `tests/Output/OutputWriterTest.php` — writes files, creates directories, detects duplicates, skips null rendered content
+  - `tests/Asset/AssetCopierTest.php` — copies files, preserves structure, skips missing
+- [x] Run tests, confirm they fail
+- [x] Create `src/Output/OutputWriter.php` — service that:
   - Takes a list of rendered Documents (with `outputPath` and `renderedContent`)
   - Creates necessary directories
   - Writes each document's `renderedContent` to its `outputPath`
   - Detects duplicate output paths → error with both source files listed
   - Returns count of files written
-- [ ] Create `src/Asset/AssetCopier.php` — service that:
-  - Takes the list of static asset relative paths from `ScanResult`
+- [x] Create `src/Asset/AssetCopier.php` — service that:
+  - Takes the list of static asset absolute paths from `ScanResult`
   - Copies each file from source to destination, preserving relative directory structure
-  - Respects include/exclude config
-  - Does not copy files from underscore directories (`_layouts`, `_includes`, etc.)
+  - Skips missing source files gracefully
   - Returns count of files copied
-- [ ] Create `src/Command/SiteCleanCommand.php`:
+- [x] Create `src/Command/SiteCleanCommand.php`:
   - Deletes the destination directory (`_site` by default)
   - Accepts `--source` and `--destination` options
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
