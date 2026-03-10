@@ -510,7 +510,7 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write unit tests first:
+- [x] Write unit tests first:
   - `tests/Permalink/PermalinkGeneratorTest.php`:
     - Post with date → correct URL from pattern
     - Page with title → correct URL
@@ -520,26 +520,26 @@ docker compose run --rm app composer lint
   - `tests/Permalink/OutputPathResolverTest.php`:
     - Pretty URL → `/about/index.html`
     - File URL → `/feed.xml`
-- [ ] Run tests, confirm they fail
-- [ ] Create `src/Permalink/PermalinkGenerator.php` — service that:
+- [x] Run tests, confirm they fail
+- [x] Create `src/Permalink/PermalinkGenerator.php` — service that:
   - Takes a `Document` and a permalink pattern string
   - Supports tokens: `:year`, `:month`, `:day`, `:title`, `:slug`, `:collection`
   - Resolves tokens from document attributes
   - Returns the URL string (e.g. `/2026/03/10/my-post/`)
   - Uses document-level `permalink` from front matter if present (overrides pattern)
-- [ ] Create `src/Permalink/OutputPathResolver.php` — service that:
+- [x] Create `src/Permalink/OutputPathResolver.php` — service that:
   - Takes a URL and destination directory
   - Applies rules:
     - URL ending in `/` → `<dest>/<url>/index.html`
     - URL with file extension → `<dest>/<url>` as-is
   - Returns absolute filesystem path
-- [ ] Implement permalink pattern resolution order:
+- [x] Implement permalink pattern resolution order:
   - Front matter `permalink` (exact override) → use as-is
   - Collection-level `permalink` pattern → resolve tokens
   - Config-level `permalink` pattern → resolve tokens
   - Framework default (posts: `/:year/:month/:day/:title/`, pages: `/:title/`)
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
