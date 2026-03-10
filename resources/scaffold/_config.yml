@@ -1,0 +1,4 @@
+title: "My Site"
+url: "http://localhost:8000"
+description: "A site built with Limb"
+permalink: "/:year/:month/:day/:title/"

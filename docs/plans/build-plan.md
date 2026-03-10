@@ -767,11 +767,11 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write test first:
+- [x] Write test first:
   - `tests/Command/SiteInitCommandTest.php` — creates site in temp dir, asserts all files exist, asserts no overwrite
-- [ ] Run tests, confirm they fail
-- [ ] Store scaffold templates in `resources/scaffold/` within the Limb app
-- [ ] Create `src/Command/SiteInitCommand.php`:
+- [x] Run tests, confirm they fail
+- [x] Store scaffold templates in `resources/scaffold/` within the Limb app
+- [x] Create `src/Command/SiteInitCommand.php`:
   - Accepts a `path` argument (required) — where to create the site
   - Creates the directory structure:
     ```
@@ -795,8 +795,8 @@ docker compose run --rm app composer lint
     ```
   - Refuses to overwrite if directory already contains `_config.yml`
   - Outputs what was created
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash
