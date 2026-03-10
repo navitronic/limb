@@ -973,23 +973,23 @@ docker compose run --rm app composer lint
 
 **Tasks:**
 
-- [ ] Write tests first for each error path
-- [ ] Run tests, confirm they fail
-- [ ] Review and harden error messages across all services:
+- [x] Write tests first for each error path
+- [x] Run tests, confirm they fail
+- [x] Review and harden error messages across all services:
   - `ConfigLoader`: "Invalid YAML in /site/_config.yml at line 15: \<parse error\>"
   - `FrontMatterParser`: "Invalid front matter in /site/_posts/2026-01-15-hello.md: \<parse error\>"
   - `LayoutResolver`: "Layout 'post' not found. Referenced by /site/index.md. Expected at /site/_layouts/post.html.twig"
   - `Twig include errors`: "Include 'sidebar.html.twig' not found. Referenced in layout 'default'. Expected at /site/_includes/sidebar.html.twig"
   - `OutputWriter`: "Duplicate output path: _site/about/index.html claimed by both /site/about.md and /site/_pages/about.md"
   - `PermalinkGenerator`: "Unknown permalink token ':author' in pattern '/:author/:title/'. Valid tokens: :year, :month, :day, :title, :slug, :collection"
-- [ ] Create custom exception classes where useful:
+- [x] Create custom exception classes where useful:
   - `ConfigException`
   - `FrontMatterException`
   - `RenderException`
   - `OutputException`
-- [ ] Update `site:build` to catch exceptions and format them for CLI output (no raw stack traces in normal mode, stack traces in `-vvv`)
-- [ ] Run tests, confirm they pass
-- [ ] Run `composer lint` — confirm clean
+- [x] Update `site:build` to catch exceptions and format them for CLI output (no raw stack traces in normal mode, stack traces in `-vvv`)
+- [x] Run tests, confirm they pass
+- [x] Run `composer lint` — confirm clean
 
 **Verification:**
 ```bash

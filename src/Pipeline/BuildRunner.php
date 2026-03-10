@@ -16,6 +16,7 @@ use App\Event\AfterRenderEvent;
 use App\Event\BeforeRenderEvent;
 use App\Event\BuildCompleteEvent;
 use App\Event\SiteLoadedEvent;
+use App\Exception\RenderException;
 use App\FrontMatter\FrontMatterParser;
 use App\Markdown\MarkdownRenderer;
 use App\Model\BuildResult;
@@ -129,7 +130,7 @@ final class BuildRunner
         foreach ($allDocuments as $doc) {
             try {
                 $doc->renderedContent = $renderer->render($doc, $site);
-            } catch (\RuntimeException $e) {
+            } catch (RenderException $e) {
                 $errors[] = $e->getMessage();
             }
         }

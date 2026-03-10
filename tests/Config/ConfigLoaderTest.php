@@ -52,7 +52,7 @@ final class ConfigLoaderTest extends TestCase
 
         $loader = new ConfigLoader();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\App\Exception\ConfigException::class);
         $this->expectExceptionMessageMatches('/Failed to parse config/');
         $loader->load($this->fixtureDir);
     }
@@ -73,7 +73,7 @@ final class ConfigLoaderTest extends TestCase
     {
         $loader = new ConfigLoader();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\App\Exception\ConfigException::class);
         $this->expectExceptionMessageMatches('/Config file not found/');
         $loader->load($this->fixtureDir, $this->fixtureDir.'/nonexistent.yml');
     }

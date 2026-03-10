@@ -112,7 +112,7 @@ final class DocumentRendererTest extends TestCase
             layoutName: 'nonexistent',
         );
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\App\Exception\RenderException::class);
         $this->expectExceptionMessageMatches('/layout.*nonexistent/i');
         $this->renderer->render($doc, $this->site);
     }
