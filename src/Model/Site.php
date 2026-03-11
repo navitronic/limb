@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace Limb\Model;
 
-use App\Config\SiteConfig;
+use Limb\Config\SiteConfig;
 
 final class Site
 {

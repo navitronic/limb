@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Permalink;
+namespace Limb\Permalink;
 
-use App\Exception\ConfigException;
-use App\Model\Document;
+use Limb\Exception\ConfigException;
+use Limb\Model\Document;
 
 final class PermalinkGenerator
 {

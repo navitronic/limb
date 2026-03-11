@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Content;
+namespace Limb\Content;
 
-use App\Config\SiteConfig;
+use Limb\Config\SiteConfig;
 use Symfony\Component\Finder\Finder;
 
 final class ContentLocator

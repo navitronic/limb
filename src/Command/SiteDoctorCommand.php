@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace Limb\Command;
 
-use App\Config\ConfigLoader;
-use App\Config\ConfigMerger;
-use App\Content\ContentClassification;
-use App\Content\ContentLocator;
-use App\FrontMatter\FrontMatterParser;
+use Limb\Config\ConfigLoader;
+use Limb\Config\ConfigMerger;
+use Limb\Content\ContentClassification;
+use Limb\Content\ContentLocator;
+use Limb\FrontMatter\FrontMatterParser;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

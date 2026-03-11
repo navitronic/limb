@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace Limb\Model;
 
-use App\FrontMatter\ParsedContent;
+use Limb\FrontMatter\ParsedContent;
 
 final class DocumentFactory
 {

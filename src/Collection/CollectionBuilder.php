@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Collection;
+namespace Limb\Collection;
 
-use App\Config\SiteConfig;
-use App\Model\Collection;
-use App\Model\Document;
+use Limb\Config\SiteConfig;
+use Limb\Model\Collection;
+use Limb\Model\Document;
 
 final class CollectionBuilder
 {

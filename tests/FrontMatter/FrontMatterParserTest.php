@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\FrontMatter;
+namespace Limb\Tests\FrontMatter;
 
-use App\FrontMatter\FrontMatterParser;
-use App\FrontMatter\ParsedContent;
+use Limb\FrontMatter\FrontMatterParser;
+use Limb\FrontMatter\ParsedContent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -67,7 +67,7 @@ final class FrontMatterParserTest extends TestCase
             Body content.
             MD;
 
-        $this->expectException(\App\Exception\FrontMatterException::class);
+        $this->expectException(\Limb\Exception\FrontMatterException::class);
         $this->expectExceptionMessageMatches('/Invalid YAML.*front matter.*test\.md/');
         $this->parser->parse($content, 'test.md');
     }

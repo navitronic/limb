@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration;
+namespace Limb\Tests\Integration;
 
-use App\Asset\AssetCopier;
-use App\Collection\CollectionBuilder;
-use App\Config\ConfigLoader;
-use App\Config\ConfigMerger;
-use App\Content\ContentLocator;
-use App\Data\DataLoader;
-use App\FrontMatter\FrontMatterParser;
-use App\Markdown\MarkdownRenderer;
-use App\Model\DocumentFactory;
-use App\Output\OutputWriter;
-use App\Permalink\OutputPathResolver;
-use App\Permalink\PermalinkGenerator;
-use App\Pipeline\BuildRunner;
-use App\Rendering\TwigEnvironmentFactory;
+use Limb\Asset\AssetCopier;
+use Limb\Collection\CollectionBuilder;
+use Limb\Config\ConfigLoader;
+use Limb\Config\ConfigMerger;
+use Limb\Content\ContentLocator;
+use Limb\Data\DataLoader;
+use Limb\FrontMatter\FrontMatterParser;
+use Limb\Markdown\MarkdownRenderer;
+use Limb\Model\DocumentFactory;
+use Limb\Output\OutputWriter;
+use Limb\Permalink\OutputPathResolver;
+use Limb\Permalink\PermalinkGenerator;
+use Limb\Pipeline\BuildRunner;
+use Limb\Rendering\TwigEnvironmentFactory;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;

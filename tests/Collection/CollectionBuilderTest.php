@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Collection;
+namespace Limb\Tests\Collection;
 
-use App\Collection\CollectionBuilder;
-use App\Config\SiteConfig;
-use App\Model\Collection;
-use App\Model\Document;
+use Limb\Collection\CollectionBuilder;
+use Limb\Config\SiteConfig;
+use Limb\Model\Collection;
+use Limb\Model\Document;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

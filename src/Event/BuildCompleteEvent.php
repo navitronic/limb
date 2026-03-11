@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace Limb\Event;
 
-use App\Model\BuildResult;
+use Limb\Model\BuildResult;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**

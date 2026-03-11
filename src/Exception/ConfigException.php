@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Exception;
+namespace Limb\Exception;
 
 final class ConfigException extends \RuntimeException
 {

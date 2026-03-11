@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Config;
+namespace Limb\Tests\Config;
 
-use App\Config\ConfigMerger;
-use App\Config\SiteConfig;
+use Limb\Config\ConfigMerger;
+use Limb\Config\SiteConfig;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

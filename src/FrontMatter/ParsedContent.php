@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\FrontMatter;
+namespace Limb\FrontMatter;
 
 final readonly class ParsedContent
 {

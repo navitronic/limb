@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Asset;
+namespace Limb\Tests\Asset;
 
-use App\Asset\AssetCopier;
+use Limb\Asset\AssetCopier;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

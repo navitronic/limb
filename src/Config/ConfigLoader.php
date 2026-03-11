@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Config;
+namespace Limb\Config;
 
-use App\Exception\ConfigException;
+use Limb\Exception\ConfigException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 

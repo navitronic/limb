@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Markdown;
+namespace Limb\Markdown;
 
-use App\Exception\RenderException;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Exception\CommonMarkException;
+use Limb\Exception\RenderException;
 
 final class MarkdownRenderer
 {

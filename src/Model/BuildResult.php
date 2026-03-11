@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace Limb\Model;
 
 final class BuildResult
 {

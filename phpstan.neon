@@ -3,7 +3,7 @@ parameters:
     paths:
         - src
     symfony:
-        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+        containerXmlPath: var/cache/dev/Limb_KernelDevDebugContainer.xml
 
 includes:
     - vendor/phpstan/phpstan-symfony/extension.neon

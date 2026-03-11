@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Permalink;
+namespace Limb\Permalink;
 
 final class OutputPathResolver
 {

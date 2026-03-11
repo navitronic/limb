@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Permalink;
+namespace Limb\Tests\Permalink;
 
-use App\Model\Document;
-use App\Permalink\PermalinkGenerator;
+use Limb\Model\Document;
+use Limb\Permalink\PermalinkGenerator;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -131,7 +131,7 @@ final class PermalinkGeneratorTest extends TestCase
     {
         $doc = $this->createPage('about');
 
-        $this->expectException(\App\Exception\ConfigException::class);
+        $this->expectException(\Limb\Exception\ConfigException::class);
         $this->expectExceptionMessageMatches('/Unknown permalink token.*:author/');
         $this->generator->generate($doc, '/:author/:title/');
     }

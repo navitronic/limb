@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Model;
+namespace Limb\Tests\Model;
 
-use App\FrontMatter\ParsedContent;
-use App\Model\DocumentFactory;
+use Limb\FrontMatter\ParsedContent;
+use Limb\Model\DocumentFactory;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

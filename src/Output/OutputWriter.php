@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Output;
+namespace Limb\Output;
 
-use App\Exception\OutputException;
-use App\Model\Document;
+use Limb\Exception\OutputException;
+use Limb\Model\Document;
 
 final class OutputWriter
 {
