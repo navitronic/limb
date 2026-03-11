@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Pipeline;
+namespace Limb\Pipeline;
 
-use App\Asset\AssetCopier;
-use App\Collection\CollectionBuilder;
-use App\Config\ConfigLoader;
-use App\Config\ConfigMerger;
-use App\Config\SiteConfig;
-use App\Content\ContentClassification;
-use App\Content\ContentLocator;
-use App\Data\DataLoader;
-use App\Event\AfterRenderEvent;
-use App\Event\BeforeRenderEvent;
-use App\Event\BuildCompleteEvent;
-use App\Event\SiteLoadedEvent;
-use App\Exception\RenderException;
-use App\FrontMatter\FrontMatterParser;
-use App\Markdown\MarkdownRenderer;
-use App\Model\BuildResult;
-use App\Model\Document;
-use App\Model\DocumentFactory;
-use App\Model\Site;
-use App\Output\OutputWriter;
-use App\Permalink\OutputPathResolver;
-use App\Permalink\PermalinkGenerator;
-use App\Rendering\DocumentRenderer;
-use App\Rendering\TwigEnvironmentFactory;
+use Limb\Asset\AssetCopier;
+use Limb\Collection\CollectionBuilder;
+use Limb\Config\ConfigLoader;
+use Limb\Config\ConfigMerger;
+use Limb\Config\SiteConfig;
+use Limb\Content\ContentClassification;
+use Limb\Content\ContentLocator;
+use Limb\Data\DataLoader;
+use Limb\Event\AfterRenderEvent;
+use Limb\Event\BeforeRenderEvent;
+use Limb\Event\BuildCompleteEvent;
+use Limb\Event\SiteLoadedEvent;
+use Limb\Exception\RenderException;
+use Limb\FrontMatter\FrontMatterParser;
+use Limb\Markdown\MarkdownRenderer;
+use Limb\Model\BuildResult;
+use Limb\Model\Document;
+use Limb\Model\DocumentFactory;
+use Limb\Model\Site;
+use Limb\Output\OutputWriter;
+use Limb\Permalink\OutputPathResolver;
+use Limb\Permalink\PermalinkGenerator;
+use Limb\Rendering\DocumentRenderer;
+use Limb\Rendering\TwigEnvironmentFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class BuildRunner

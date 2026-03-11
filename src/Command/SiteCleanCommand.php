@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace Limb\Command;
 
-use App\Config\ConfigLoader;
-use App\Config\ConfigMerger;
+use Limb\Config\ConfigLoader;
+use Limb\Config\ConfigMerger;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

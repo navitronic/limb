@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Rendering;
+namespace Limb\Rendering;
 
-use App\Exception\RenderException;
-use App\FrontMatter\FrontMatterParser;
-use App\Markdown\MarkdownRenderer;
-use App\Model\Document;
-use App\Model\Site;
+use Limb\Exception\RenderException;
+use Limb\FrontMatter\FrontMatterParser;
+use Limb\Markdown\MarkdownRenderer;
+use Limb\Model\Document;
+use Limb\Model\Site;
 use Twig\Environment;
 
 final class DocumentRenderer

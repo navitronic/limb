@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Content;
+namespace Limb\Tests\Content;
 
-use App\Config\SiteConfig;
-use App\Content\ContentClassification;
-use App\Content\ContentLocator;
-use App\Content\ScanResult;
+use Limb\Config\SiteConfig;
+use Limb\Content\ContentClassification;
+use Limb\Content\ContentLocator;
+use Limb\Content\ScanResult;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

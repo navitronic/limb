@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Data;
+namespace Limb\Tests\Data;
 
-use App\Data\DataLoader;
+use Limb\Data\DataLoader;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -82,7 +82,7 @@ final class DataLoaderTest extends TestCase
 
         try {
             $loader = new DataLoader();
-            $this->expectException(\App\Exception\ConfigException::class);
+            $this->expectException(\Limb\Exception\ConfigException::class);
             $this->expectExceptionMessageMatches('/Failed to parse data file/');
             $loader->load($tmpDir);
         } finally {
@@ -100,7 +100,7 @@ final class DataLoaderTest extends TestCase
 
         try {
             $loader = new DataLoader();
-            $this->expectException(\App\Exception\ConfigException::class);
+            $this->expectException(\Limb\Exception\ConfigException::class);
             $this->expectExceptionMessageMatches('/Failed to parse data file/');
             $loader->load($tmpDir);
         } finally {

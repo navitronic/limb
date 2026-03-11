@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Config;
+namespace Limb\Config;
 
 final readonly class SiteConfig
 {

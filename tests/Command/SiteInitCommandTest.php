@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Command;
+namespace Limb\Tests\Command;
 
-use App\Command\SiteInitCommand;
+use Limb\Command\SiteInitCommand;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;

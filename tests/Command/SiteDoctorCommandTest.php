@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Command;
+namespace Limb\Tests\Command;
 
-use App\Command\SiteDoctorCommand;
-use App\Config\ConfigLoader;
-use App\Config\ConfigMerger;
-use App\Content\ContentLocator;
-use App\FrontMatter\FrontMatterParser;
+use Limb\Command\SiteDoctorCommand;
+use Limb\Config\ConfigLoader;
+use Limb\Config\ConfigMerger;
+use Limb\Content\ContentLocator;
+use Limb\FrontMatter\FrontMatterParser;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Asset;
+namespace Limb\Asset;
 
 final class AssetCopier
 {

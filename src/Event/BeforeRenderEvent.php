@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace Limb\Event;
 
-use App\Model\Document;
-use App\Model\Site;
+use Limb\Model\Document;
+use Limb\Model\Site;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**

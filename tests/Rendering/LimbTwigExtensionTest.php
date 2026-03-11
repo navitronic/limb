@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Rendering;
+namespace Limb\Tests\Rendering;
 
-use App\Rendering\LimbTwigExtension;
+use Limb\Rendering\LimbTwigExtension;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;

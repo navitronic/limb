@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Config;
+namespace Limb\Tests\Config;
 
-use App\Config\ConfigLoader;
+use Limb\Config\ConfigLoader;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -52,7 +52,7 @@ final class ConfigLoaderTest extends TestCase
 
         $loader = new ConfigLoader();
 
-        $this->expectException(\App\Exception\ConfigException::class);
+        $this->expectException(\Limb\Exception\ConfigException::class);
         $this->expectExceptionMessageMatches('/Failed to parse config/');
         $loader->load($this->fixtureDir);
     }
@@ -73,7 +73,7 @@ final class ConfigLoaderTest extends TestCase
     {
         $loader = new ConfigLoader();
 
-        $this->expectException(\App\Exception\ConfigException::class);
+        $this->expectException(\Limb\Exception\ConfigException::class);
         $this->expectExceptionMessageMatches('/Config file not found/');
         $loader->load($this->fixtureDir, $this->fixtureDir.'/nonexistent.yml');
     }

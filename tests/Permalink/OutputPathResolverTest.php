@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Permalink;
+namespace Limb\Tests\Permalink;
 
-use App\Permalink\OutputPathResolver;
+use Limb\Permalink\OutputPathResolver;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

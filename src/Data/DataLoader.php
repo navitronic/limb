@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Data;
+namespace Limb\Data;
 
-use App\Exception\ConfigException;
+use Limb\Exception\ConfigException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;

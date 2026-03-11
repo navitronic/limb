@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Output;
+namespace Limb\Tests\Output;
 
-use App\Model\Document;
-use App\Output\OutputWriter;
+use Limb\Model\Document;
+use Limb\Output\OutputWriter;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -73,7 +73,7 @@ final class OutputWriterTest extends TestCase
 
         $writer = new OutputWriter();
 
-        $this->expectException(\App\Exception\OutputException::class);
+        $this->expectException(\Limb\Exception\OutputException::class);
         $this->expectExceptionMessageMatches('/duplicate.*output.*path/i');
         $writer->write($docs);
     }

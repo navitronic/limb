@@ -29,12 +29,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "Limb\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "Limb\\Tests\\": "tests/"
         }
     },
     "replace": {

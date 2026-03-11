@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Rendering;
+namespace Limb\Rendering;
 
 use League\CommonMark\CommonMarkConverter;
 use Twig\Extension\AbstractExtension;

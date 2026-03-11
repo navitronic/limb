@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Rendering;
+namespace Limb\Tests\Rendering;
 
-use App\Config\SiteConfig;
-use App\Markdown\MarkdownRenderer;
-use App\Model\Document;
-use App\Model\Site;
-use App\Rendering\DocumentRenderer;
-use App\Rendering\TwigEnvironmentFactory;
+use Limb\Config\SiteConfig;
+use Limb\Markdown\MarkdownRenderer;
+use Limb\Model\Document;
+use Limb\Model\Site;
+use Limb\Rendering\DocumentRenderer;
+use Limb\Rendering\TwigEnvironmentFactory;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -112,7 +112,7 @@ final class DocumentRendererTest extends TestCase
             layoutName: 'nonexistent',
         );
 
-        $this->expectException(\App\Exception\RenderException::class);
+        $this->expectException(\Limb\Exception\RenderException::class);
         $this->expectExceptionMessageMatches('/layout.*nonexistent/i');
         $this->renderer->render($doc, $this->site);
     }

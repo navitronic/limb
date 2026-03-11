@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace Limb\Command;
 
-use App\Pipeline\BuildRunner;
+use Limb\Pipeline\BuildRunner;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
