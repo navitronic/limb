@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Limb\Markdown;
 
 final class MetadataResolver
@@ -21,12 +23,12 @@ final class MetadataResolver
         }
 
         [$createdAt, $createdKeys] = $this->resolveDate($metadata, ['created_at', 'createdAt', 'date']);
-        $assignableKeys = \array_merge($assignableKeys, $createdKeys);
+        $assignableKeys = array_merge($assignableKeys, $createdKeys);
 
         [$updatedAt, $updatedKeys] = $this->resolveDate($metadata, ['updated_at', 'updatedAt', 'updated']);
-        $assignableKeys = \array_merge($assignableKeys, $updatedKeys);
+        $assignableKeys = array_merge($assignableKeys, $updatedKeys);
 
-        if ($createdAt === null) {
+        if (null === $createdAt) {
             $createdAt = $updatedAt ?? new \DateTime();
         }
 
@@ -37,25 +39,26 @@ final class MetadataResolver
 
     /**
      * @param array<string, mixed> $metadata
+     *
      * @return array{0: string, 1: bool}
      */
     private function resolveTitle(array $metadata, string $content, ?string $sourcePath): array
     {
         if (\array_key_exists('title', $metadata) && \is_string($metadata['title'])) {
-            $titleValue = \trim($metadata['title']);
-            if ($titleValue !== '') {
+            $titleValue = trim($metadata['title']);
+            if ('' !== $titleValue) {
                 return [$titleValue, true];
             }
         }
 
         $matches = null;
-        if (\preg_match('/^#{1,6}\s+(.+?)\s*#*\s*$/m', $content, $matches) === 1) {
-            return [\trim($matches[1]), false];
+        if (1 === preg_match('/^#{1,6}\s+(.+?)\s*#*\s*$/m', $content, $matches)) {
+            return [trim($matches[1]), false];
         }
 
-        if ($sourcePath !== null) {
-            $filename = \pathinfo($sourcePath, \PATHINFO_FILENAME);
-            if ($filename !== '') {
+        if (null !== $sourcePath) {
+            $filename = pathinfo($sourcePath, \PATHINFO_FILENAME);
+            if ('' !== $filename) {
                 return [$this->humanizeFilename($filename), false];
             }
         }
@@ -65,20 +68,21 @@ final class MetadataResolver
 
     /**
      * @param array<string, mixed> $metadata
+     *
      * @return array{0: string, 1: bool}
      */
     private function resolveSlug(array $metadata, ?string $sourcePath, string $title): array
     {
         if (\array_key_exists('slug', $metadata) && \is_string($metadata['slug'])) {
-            $slugValue = \trim($metadata['slug']);
-            if ($slugValue !== '') {
+            $slugValue = trim($metadata['slug']);
+            if ('' !== $slugValue) {
                 return [$slugValue, true];
             }
         }
 
-        if ($sourcePath !== null) {
-            $filename = \pathinfo($sourcePath, \PATHINFO_FILENAME);
-            if ($filename !== '') {
+        if (null !== $sourcePath) {
+            $filename = pathinfo($sourcePath, \PATHINFO_FILENAME);
+            if ('' !== $filename) {
                 return [$this->slugify($filename), false];
             }
         }
@@ -88,7 +92,8 @@ final class MetadataResolver
 
     /**
      * @param array<string, mixed> $metadata
-     * @param array<int, string> $keys
+     * @param array<int, string>   $keys
+     *
      * @return array{0: ?\DateTime, 1: array<int, string>}
      */
     private function resolveDate(array $metadata, array $keys): array
@@ -102,9 +107,9 @@ final class MetadataResolver
             }
 
             $parsed = $this->parseDateValue($metadata[$key]);
-            if ($parsed !== null) {
+            if (null !== $parsed) {
                 $assignableKeys[] = $key;
-                if ($resolved === null) {
+                if (null === $resolved) {
                     $resolved = $parsed;
                 }
             }
@@ -115,18 +120,18 @@ final class MetadataResolver
 
     /**
      * @param array<string, mixed> $metadata
-     * @param array<int, string> $assignableKeys
+     * @param array<int, string>   $assignableKeys
      *
      * @return array<string, mixed>
      */
     private function resolveExtra(array $metadata, array $assignableKeys): array
     {
-        if ($assignableKeys === []) {
+        if ([] === $assignableKeys) {
             return $metadata;
         }
 
         $extra = $metadata;
-        foreach (\array_unique($assignableKeys) as $key) {
+        foreach (array_unique($assignableKeys) as $key) {
             unset($extra[$key]);
         }
 
@@ -144,8 +149,8 @@ final class MetadataResolver
         }
 
         if (\is_string($value)) {
-            $trimmed = \trim($value);
-            if ($trimmed === '') {
+            $trimmed = trim($value);
+            if ('' === $trimmed) {
                 return null;
             }
 
@@ -161,25 +166,25 @@ final class MetadataResolver
 
     private function slugify(string $value): string
     {
-        $normalized = \preg_replace('/[^a-zA-Z0-9]+/', '-', $value);
-        $normalized = \trim($normalized ?? '', '-');
+        $normalized = preg_replace('/[^a-zA-Z0-9]+/', '-', $value);
+        $normalized = trim($normalized ?? '', '-');
 
-        if ($normalized === '') {
+        if ('' === $normalized) {
             return 'untitled';
         }
 
-        return \strtolower($normalized);
+        return strtolower($normalized);
     }
 
     private function humanizeFilename(string $filename): string
     {
-        $label = \str_replace(['-', '_'], ' ', $filename);
-        $label = \trim($label);
+        $label = str_replace(['-', '_'], ' ', $filename);
+        $label = trim($label);
 
-        if ($label === '') {
+        if ('' === $label) {
             return 'Untitled';
         }
 
-        return \ucwords($label);
+        return ucwords($label);
     }
 }

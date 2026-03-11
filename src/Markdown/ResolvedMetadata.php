@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Limb\Markdown;
 
 final class ResolvedMetadata
@@ -13,5 +15,6 @@ final class ResolvedMetadata
         public readonly \DateTime $createdAt,
         public readonly ?\DateTime $updatedAt,
         public readonly array $extra,
-    ) {}
+    ) {
+    }
 }

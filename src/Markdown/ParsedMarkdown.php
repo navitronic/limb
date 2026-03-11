@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Limb\Markdown;
 
 final class ParsedMarkdown
@@ -10,5 +12,6 @@ final class ParsedMarkdown
     public function __construct(
         public readonly string $content,
         public readonly array $metadata,
-    ) {}
+    ) {
+    }
 }

@@ -20,13 +20,11 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --no-progress
 
-      - name: Format check
-        run: |
-          vendor/bin/mago format
-          git diff --exit-code
+      - name: Code style check
+        run: composer cs:check
 
       - name: Static analysis
-        run: vendor/bin/mago analyze
+        run: composer stan
 
       - name: Tests
         run: vendor/bin/phpunit
