@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Limb\Markdown;
 
 use League\CommonMark\CommonMarkConverter;

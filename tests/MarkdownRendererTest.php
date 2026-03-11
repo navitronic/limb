@@ -24,13 +24,13 @@ final class MarkdownRendererTest extends TestCase
     {
         $renderer = new MarkdownRenderer();
 
-        $markdown = "---\n" .
-            "title: Hello World\n" .
-            "tags:\n" .
-            "  - intro\n" .
-            "created_at: 2024-01-02\n" .
-            "updated_at: 2024-01-03\n" .
-            "---\n\n" .
+        $markdown = "---\n".
+            "title: Hello World\n".
+            "tags:\n".
+            "  - intro\n".
+            "created_at: 2024-01-02\n".
+            "updated_at: 2024-01-03\n".
+            "---\n\n".
             "# Hello World\n\nBody";
 
         $limb = $renderer->parse($markdown);
@@ -61,10 +61,10 @@ final class MarkdownRendererTest extends TestCase
     {
         $renderer = new MarkdownRenderer();
 
-        $markdown = "---\n" .
-            "title: [unclosed\n" .
-            "---\n\n" .
-            "# Hello";
+        $markdown = "---\n".
+            "title: [unclosed\n".
+            "---\n\n".
+            '# Hello';
 
         $this->assertNull($renderer->parse($markdown));
     }
@@ -72,17 +72,17 @@ final class MarkdownRendererTest extends TestCase
     public function testParseFileReturnsLimb(): void
     {
         $renderer = new MarkdownRenderer();
-        $path = \tempnam(\sys_get_temp_dir(), 'limb_');
+        $path = tempnam(sys_get_temp_dir(), 'limb_');
 
         $this->assertNotFalse($path, 'Failed to create temporary file.');
 
-        $markdown = "---\n" .
-            "title: File Post\n" .
-            "slug: file-post\n" .
-            "---\n\n" .
+        $markdown = "---\n".
+            "title: File Post\n".
+            "slug: file-post\n".
+            "---\n\n".
             "# File Post\n\nBody";
 
-        $contentsWritten = \file_put_contents($path, $markdown);
+        $contentsWritten = file_put_contents($path, $markdown);
 
         $this->assertNotFalse($contentsWritten, 'Failed to write temporary markdown.');
 
@@ -93,7 +93,7 @@ final class MarkdownRendererTest extends TestCase
             $this->assertSame('File Post', $limb->title);
             $this->assertSame('file-post', $limb->slug);
         } finally {
-            \unlink($path);
+            unlink($path);
         }
     }
 
@@ -103,6 +103,6 @@ final class MarkdownRendererTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
 
-        $renderer->parseFile('/tmp/limb-missing-file-' . \uniqid() . '.md');
+        $renderer->parseFile('/tmp/limb-missing-file-'.uniqid().'.md');
     }
 }

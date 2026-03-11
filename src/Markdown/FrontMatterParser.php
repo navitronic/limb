@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Limb\Markdown;
 
 use League\CommonMark\Extension\FrontMatter\Exception\InvalidFrontMatterException;
@@ -35,7 +37,7 @@ final class FrontMatterParser
         }
 
         $metadata = [];
-        foreach (\array_keys($frontMatter) as $key) {
+        foreach (array_keys($frontMatter) as $key) {
             if (!\is_string($key)) {
                 continue;
             }

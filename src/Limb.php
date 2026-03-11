@@ -14,7 +14,8 @@ class Limb
         public readonly string $content,
         public readonly string $html,
         public readonly array $metadata,
-    ) {}
+    ) {
+    }
 
     public function updatedAt()
     {

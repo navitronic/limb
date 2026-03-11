@@ -43,12 +43,12 @@ final class RenderCommand extends Command
         try {
             $limb = $renderer->parseFile($path);
         } catch (\RuntimeException $exception) {
-            $output->writeln('<error>' . $exception->getMessage() . '</error>');
+            $output->writeln('<error>'.$exception->getMessage().'</error>');
 
             return Command::FAILURE;
         }
 
-        if ($limb === null) {
+        if (null === $limb) {
             $output->writeln('<error>Failed to parse markdown.</error>');
 
             return Command::FAILURE;
