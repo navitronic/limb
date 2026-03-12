@@ -150,6 +150,7 @@ final class BuildRunner
         $elapsedTime = microtime(true) - $startTime;
 
         $result = new BuildResult(
+            destinationDir: $config->destination,
             pagesRendered: \count($pages),
             postsRendered: \count($posts),
             staticFilesCopied: $staticFilesCopied,

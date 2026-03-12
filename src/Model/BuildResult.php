@@ -11,6 +11,7 @@ final class BuildResult
      * @param string[] $warnings
      */
     public function __construct(
+        public string $destinationDir = '',
         public int $pagesRendered = 0,
         public int $postsRendered = 0,
         public int $staticFilesCopied = 0,
