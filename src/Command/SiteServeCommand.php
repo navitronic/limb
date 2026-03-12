@@ -82,8 +82,12 @@ class SiteServeCommand extends Command
             $result->elapsedTime,
         ));
 
-        // Determine the destination directory from config
-        $destDir = $destination ?? rtrim($source, '/').'/_site';
+        // Determine the destination directory from the build result
+        $destDir = $result->destinationDir;
+
+        if (!is_dir($destDir)) {
+            mkdir($destDir, 0o777, true);
+        }
 
         // 2. Start PHP built-in server
         $addr = $host.':'.$port;
