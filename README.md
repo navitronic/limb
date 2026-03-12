@@ -19,27 +19,27 @@ Limb takes a directory of Markdown files, Twig templates, and static assets and 
 
 ## Prerequisites
 
-- [Docker](https://www.docker.com/) with Compose v2
+- [Docker](https://www.docker.com/)
 
 That's it. PHP, Composer, and all dependencies are encapsulated in the Docker image.
 
 ## Quick start
 
 ```bash
-# Build the Docker image
-docker compose build
+# Pull the image
+docker pull ghcr.io/navitronic/limb:latest
 
-# Scaffold a new site
-docker compose run --rm app php bin/console site:init /site
+# Scaffold a new site in the current directory
+docker run --rm -v "$(pwd)":/site ghcr.io/navitronic/limb php bin/console site:init /site
 
 # Validate the site structure
-docker compose run --rm app php bin/console site:doctor --source=/site
+docker run --rm -v "$(pwd)":/site ghcr.io/navitronic/limb php bin/console site:doctor --source=/site
 
 # Build the site
-docker compose run --rm app php bin/console site:build --source=/site
+docker run --rm -v "$(pwd)":/site ghcr.io/navitronic/limb php bin/console site:build --source=/site
 
 # Start the development server (http://localhost:4000)
-docker compose run --rm --service-ports app php bin/console site:serve --source=/site
+docker run --rm -v "$(pwd)":/site -p 4000:4000 ghcr.io/navitronic/limb php bin/console site:serve --source=/site
 ```
 
 ## Site structure
@@ -119,7 +119,7 @@ Values are merged in this order (last wins):
 Scaffold a new site with starter templates, layouts, a sample post, and configuration.
 
 ```bash
-docker compose run --rm app php bin/console site:init /site
+docker run --rm -v "$(pwd)":/site ghcr.io/navitronic/limb php bin/console site:init /site
 ```
 
 ### `site:build`
@@ -127,7 +127,7 @@ docker compose run --rm app php bin/console site:init /site
 Build the static site from source to destination.
 
 ```bash
-docker compose run --rm app php bin/console site:build --source=/site
+docker run --rm -v "$(pwd)":/site ghcr.io/navitronic/limb php bin/console site:build --source=/site
 ```
 
 | Flag              | Short | Default  | Description                  |
@@ -143,7 +143,7 @@ docker compose run --rm app php bin/console site:build --source=/site
 Build the site and start a development server using PHP's built-in web server.
 
 ```bash
-docker compose run --rm --service-ports app php bin/console site:serve --source=/site
+docker run --rm -v "$(pwd)":/site -p 4000:4000 ghcr.io/navitronic/limb php bin/console site:serve --source=/site
 ```
 
 | Flag              | Short | Default    | Description              |
@@ -160,7 +160,7 @@ docker compose run --rm --service-ports app php bin/console site:serve --source=
 Validate site configuration, layouts, includes, posts, and permalink patterns. Useful for debugging build issues.
 
 ```bash
-docker compose run --rm app php bin/console site:doctor --source=/site
+docker run --rm -v "$(pwd)":/site ghcr.io/navitronic/limb php bin/console site:doctor --source=/site
 ```
 
 | Flag       | Short | Default | Description     |
@@ -172,7 +172,7 @@ docker compose run --rm app php bin/console site:doctor --source=/site
 Remove the built output directory.
 
 ```bash
-docker compose run --rm app php bin/console site:clean --source=/site
+docker run --rm -v "$(pwd)":/site ghcr.io/navitronic/limb php bin/console site:clean --source=/site
 ```
 
 | Flag            | Short | Default  | Description          |
@@ -381,6 +381,16 @@ YAML and JSON files in `_data/` are loaded and available in templates via `site.
 ```
 
 ## Development
+
+### Running with Docker Compose
+
+For development, clone the repo and use Docker Compose:
+
+```bash
+docker compose build
+docker compose run --rm app php bin/console site:build --source=/site
+docker compose run --rm --service-ports app php bin/console site:serve --source=/site
+```
 
 ### Running locally (without Docker)
 
