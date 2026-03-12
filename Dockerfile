@@ -1,17 +1,9 @@
 # =============================================================================
-# Base stage: PHP 8.4 CLI with required extensions
+# Base stage: PHP 8.4 CLI Alpine with required extensions
 # =============================================================================
-FROM php:8.4-cli AS base
+FROM php:8.4-cli-alpine AS base
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        libicu-dev \
-        libzip-dev \
-        unzip \
-    && docker-php-ext-install \
-        intl \
-        zip \
-        opcache \
-    && rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-install opcache
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -22,7 +14,8 @@ WORKDIR /app
 # =============================================================================
 FROM base AS dev
 
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN apk add --no-cache linux-headers $PHPIZE_DEPS \
+    && pecl install xdebug && docker-php-ext-enable xdebug
 
 COPY composer.json composer.lock symfony.lock ./
 RUN composer install --no-interaction --no-scripts
@@ -33,17 +26,28 @@ RUN composer run-script post-install-cmd --no-interaction || true
 CMD ["php", "bin/console"]
 
 # =============================================================================
-# Production stage: optimised autoloader, no dev dependencies
+# Production dependencies: install in a throwaway layer with Composer
 # =============================================================================
-FROM base AS production
-
-ENV APP_ENV=prod
+FROM base AS build
 
 COPY composer.json composer.lock symfony.lock ./
 RUN composer install --no-dev --no-interaction --no-scripts --optimize-autoloader
 
 COPY . .
 RUN composer run-script post-install-cmd --no-interaction || true \
-    && composer dump-autoload --optimize --classmap-authoritative
+    && composer dump-autoload --optimize --classmap-authoritative \
+    && rm -rf /usr/bin/composer
+
+# =============================================================================
+# Production stage: minimal runtime image
+# =============================================================================
+FROM php:8.4-cli-alpine AS production
+
+RUN docker-php-ext-install opcache
+
+WORKDIR /app
+ENV APP_ENV=prod
+
+COPY --from=build /app /app
 
 CMD ["php", "bin/console"]
