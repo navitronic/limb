@@ -1,9 +1,7 @@
 ---
 title: Home
-layout: default
+layout: home
 ---
-# Welcome to My Site
-
 This is your new Limb site. Edit this file to change the homepage content.
 
 ## Getting Started

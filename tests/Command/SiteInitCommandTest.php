@@ -38,6 +38,8 @@ final class SiteInitCommandTest extends TestCase
         // Layouts
         self::assertFileExists($this->tempDir.'/_layouts/default.html.twig');
         self::assertFileExists($this->tempDir.'/_layouts/post.html.twig');
+        self::assertFileExists($this->tempDir.'/_layouts/home.html.twig');
+        self::assertFileExists($this->tempDir.'/_layouts/blog.html.twig');
 
         // Includes
         self::assertFileExists($this->tempDir.'/_includes/header.html.twig');
@@ -57,6 +59,7 @@ final class SiteInitCommandTest extends TestCase
         // Pages
         self::assertFileExists($this->tempDir.'/index.md');
         self::assertFileExists($this->tempDir.'/about.md');
+        self::assertFileExists($this->tempDir.'/blog.md');
     }
 
     #[Test]
