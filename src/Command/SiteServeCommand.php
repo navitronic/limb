@@ -7,6 +7,7 @@ namespace Limb\Command;
 use Limb\Pipeline\BuildRunner;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\SignalableCommandInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,12 +18,31 @@ use Symfony\Component\Process\Process;
     name: 'site:serve',
     description: 'Build the site and start a local development server',
 )]
-class SiteServeCommand extends Command
+class SiteServeCommand extends Command implements SignalableCommandInterface
 {
+    private ?Process $serverProcess = null;
+
     public function __construct(
         private readonly BuildRunner $buildRunner,
     ) {
         parent::__construct();
+    }
+
+    /**
+     * @return list<int>
+     */
+    public function getSubscribedSignals(): array
+    {
+        return [\SIGINT, \SIGTERM];
+    }
+
+    public function handleSignal(int $signal, int|false $previousExitCode = 0): int|false
+    {
+        if (null !== $this->serverProcess && $this->serverProcess->isRunning()) {
+            $this->serverProcess->stop();
+        }
+
+        return Command::SUCCESS;
     }
 
     protected function configure(): void
@@ -93,12 +113,15 @@ class SiteServeCommand extends Command
         $addr = $host.':'.$port;
         $io->text(\sprintf('Serving at <info>http://%s</info> — press Ctrl+C to stop.', $addr));
 
-        $process = new Process(['php', '-S', $addr, '-t', $destDir]);
-        $process->setTimeout(null);
-
-        $process->run(static function (string $type, string $buffer) use ($output): void {
+        $this->serverProcess = new Process(['php', '-S', $addr, '-t', $destDir]);
+        $this->serverProcess->setTimeout(null);
+        $this->serverProcess->start(static function (string $type, string $buffer) use ($output): void {
             $output->write($buffer);
         });
+
+        while ($this->serverProcess->isRunning()) {
+            usleep(200_000);
+        }
 
         return Command::SUCCESS;
     }
