@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
 #[AsCommand(
@@ -119,10 +120,72 @@ class SiteServeCommand extends Command implements SignalableCommandInterface
             $output->write($buffer);
         });
 
+        // 3. Watch for source file changes and rebuild automatically
+        $lastSnapshot = $this->snapshotSourceFiles($source, $destDir);
+
         while ($this->serverProcess->isRunning()) {
-            usleep(200_000);
+            usleep(1_000_000);
+
+            $currentSnapshot = $this->snapshotSourceFiles($source, $destDir);
+            if ($currentSnapshot === $lastSnapshot) {
+                continue;
+            }
+
+            $lastSnapshot = $currentSnapshot;
+            $io->text('Change detected, rebuilding...');
+
+            $result = $this->buildRunner->build(
+                sourceDir: $source,
+                destinationDir: $destination,
+                configPath: $configPath,
+                includeDrafts: $includeDrafts,
+            );
+
+            if ([] !== $result->errors) {
+                foreach ($result->errors as $error) {
+                    $io->error($error);
+                }
+            } else {
+                $io->text(\sprintf(
+                    'Rebuild complete: %d pages, %d posts, %d static files in %.2fs.',
+                    $result->pagesRendered,
+                    $result->postsRendered,
+                    $result->staticFilesCopied,
+                    $result->elapsedTime,
+                ));
+            }
         }
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Build a snapshot string of all source file paths and their modification times.
+     *
+     * Changes to this string indicate a source file was added, removed, or modified.
+     */
+    private function snapshotSourceFiles(string $sourceDir, string $destDir): string
+    {
+        $finder = new Finder();
+        $finder->files()
+            ->in($sourceDir)
+            ->ignoreDotFiles(true);
+
+        // Exclude the destination directory from watching
+        $sourcePrefix = rtrim($sourceDir, '/').'/';
+        $destExclude = $destDir;
+        if (str_starts_with($destExclude, $sourcePrefix)) {
+            $destExclude = substr($destExclude, \strlen($sourcePrefix));
+        }
+        $finder->exclude($destExclude);
+
+        $entries = [];
+        foreach ($finder as $file) {
+            $entries[] = $file->getRelativePathname().':'.$file->getMTime();
+        }
+
+        sort($entries);
+
+        return implode("\n", $entries);
     }
 }
