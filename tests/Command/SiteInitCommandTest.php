@@ -40,6 +40,7 @@ final class SiteInitCommandTest extends TestCase
         self::assertFileExists($this->tempDir.'/_layouts/post.html.twig');
         self::assertFileExists($this->tempDir.'/_layouts/home.html.twig');
         self::assertFileExists($this->tempDir.'/_layouts/blog.html.twig');
+        self::assertFileExists($this->tempDir.'/_layouts/archive.html.twig');
 
         // Includes
         self::assertFileExists($this->tempDir.'/_includes/header.html.twig');

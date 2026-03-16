@@ -23,15 +23,15 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-final class BuildRunnerTest extends TestCase
+final class ArchiveBuildTest extends TestCase
 {
     private string $fixtureDir;
     private string $outputDir;
 
     protected function setUp(): void
     {
-        $this->fixtureDir = \dirname(__DIR__).'/Fixtures/basic-site';
-        $this->outputDir = sys_get_temp_dir().'/limb_build_test_'.bin2hex(random_bytes(4));
+        $this->fixtureDir = \dirname(__DIR__).'/Fixtures/archives';
+        $this->outputDir = sys_get_temp_dir().'/limb_archive_test_'.bin2hex(random_bytes(4));
     }
 
     protected function tearDown(): void
@@ -40,65 +40,73 @@ final class BuildRunnerTest extends TestCase
     }
 
     #[Test]
-    public function itBuildsCompletesite(): void
-    {
-        $runner = $this->createBuildRunner();
-        $result = $runner->build($this->fixtureDir, $this->outputDir);
-
-        // Index page exists with expected content
-        $indexPath = $this->outputDir.'/index.html';
-        self::assertFileExists($indexPath);
-        $indexHtml = (string) file_get_contents($indexPath);
-        self::assertStringContainsString('<!DOCTYPE html>', $indexHtml);
-        self::assertStringContainsString('<title>Home | Test Site</title>', $indexHtml);
-        self::assertStringContainsString('Welcome to the site.', $indexHtml);
-    }
-
-    #[Test]
-    public function itCopiesStaticAssets(): void
+    public function itGeneratesYearArchivePages(): void
     {
         $runner = $this->createBuildRunner();
         $runner->build($this->fixtureDir, $this->outputDir);
 
-        self::assertFileExists($this->outputDir.'/assets/style.css');
+        $year2026 = $this->outputDir.'/2026/index.html';
+        self::assertFileExists($year2026);
+        $html = (string) file_get_contents($year2026);
+        self::assertStringContainsString('Archive: 2026', $html);
+        self::assertStringContainsString('January Post', $html);
+        self::assertStringContainsString('March Post', $html);
+
+        $year2025 = $this->outputDir.'/2025/index.html';
+        self::assertFileExists($year2025);
+        $html2025 = (string) file_get_contents($year2025);
+        self::assertStringContainsString('Archive: 2025', $html2025);
+        self::assertStringContainsString('Old Post', $html2025);
     }
 
     #[Test]
-    public function itOutputsPostsAtCorrectPermalinkPath(): void
+    public function itGeneratesMonthArchivePages(): void
     {
         $runner = $this->createBuildRunner();
         $runner->build($this->fixtureDir, $this->outputDir);
 
-        $postPath = $this->outputDir.'/2026/01/15/hello-world/index.html';
-        self::assertFileExists($postPath);
-        $postHtml = (string) file_get_contents($postPath);
-        self::assertStringContainsString('Hello World', $postHtml);
-        self::assertStringContainsString('This is my first post.', $postHtml);
+        $jan2026 = $this->outputDir.'/2026/01/index.html';
+        self::assertFileExists($jan2026);
+        $html = (string) file_get_contents($jan2026);
+        self::assertStringContainsString('Archive: 2026/01', $html);
+        self::assertStringContainsString('January Post', $html);
+        self::assertStringNotContainsString('March Post', $html);
+
+        $mar2026 = $this->outputDir.'/2026/03/index.html';
+        self::assertFileExists($mar2026);
+        $marHtml = (string) file_get_contents($mar2026);
+        self::assertStringContainsString('March Post', $marHtml);
+        self::assertStringNotContainsString('January Post', $marHtml);
     }
 
     #[Test]
-    public function itReturnsBuildResultWithCorrectCounts(): void
-    {
-        $runner = $this->createBuildRunner();
-        $result = $runner->build($this->fixtureDir, $this->outputDir);
-
-        self::assertSame(2, $result->pagesRendered);
-        self::assertSame(1, $result->postsRendered);
-        self::assertSame(1, $result->staticFilesCopied);
-        self::assertSame([], $result->errors);
-        self::assertGreaterThan(0.0, $result->elapsedTime);
-    }
-
-    #[Test]
-    public function itRendersAboutPage(): void
+    public function itDoesNotConflictWithPostPermalinks(): void
     {
         $runner = $this->createBuildRunner();
         $runner->build($this->fixtureDir, $this->outputDir);
 
-        $aboutPath = $this->outputDir.'/about/index.html';
-        self::assertFileExists($aboutPath);
-        $aboutHtml = (string) file_get_contents($aboutPath);
-        self::assertStringContainsString('About this site.', $aboutHtml);
+        // Posts still render at their date-based URLs
+        self::assertFileExists($this->outputDir.'/2026/01/10/january-post/index.html');
+        self::assertFileExists($this->outputDir.'/2026/03/15/march-post/index.html');
+        self::assertFileExists($this->outputDir.'/2025/06/20/old-post/index.html');
+
+        // Archives exist alongside them
+        self::assertFileExists($this->outputDir.'/2026/index.html');
+        self::assertFileExists($this->outputDir.'/2026/01/index.html');
+    }
+
+    #[Test]
+    public function yearArchiveDoesNotContainPostsFromOtherYears(): void
+    {
+        $runner = $this->createBuildRunner();
+        $runner->build($this->fixtureDir, $this->outputDir);
+
+        $html2026 = (string) file_get_contents($this->outputDir.'/2026/index.html');
+        self::assertStringNotContainsString('Old Post', $html2026);
+
+        $html2025 = (string) file_get_contents($this->outputDir.'/2025/index.html');
+        self::assertStringNotContainsString('January Post', $html2025);
+        self::assertStringNotContainsString('March Post', $html2025);
     }
 
     private function createBuildRunner(): BuildRunner
