@@ -1,0 +1,29 @@
+---
+layout: default
+---
+<h1>Archive: {{ page.title }}</h1>
+{{ content|raw }}
+
+{% if page.archive_month is not defined %}
+<h2>Months</h2>
+<ul>
+{% set months_seen = [] %}
+{% for post in page.archive_posts %}
+    {% set m = post.date|date('m') %}
+    {% if m not in months_seen %}
+        {% set months_seen = months_seen|merge([m]) %}
+        <li><a href="/{{ page.archive_year }}/{{ m }}/">{{ post.date|date('F Y') }}</a></li>
+    {% endif %}
+{% endfor %}
+</ul>
+{% endif %}
+
+<h2>Posts</h2>
+<ul>
+{% for post in page.archive_posts %}
+    <li>
+        <a href="{{ post.url }}">{{ post.title }}</a>
+        <time datetime="{{ post.date|date('Y-m-d') }}">{{ post.date|date_to_string }}</time>
+    </li>
+{% endfor %}
+</ul>

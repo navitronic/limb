@@ -1,0 +1,9 @@
+---
+layout: default
+---
+<h1>Archive: {{ page.title }}</h1>
+<ul>
+{% for post in page.archive_posts %}
+<li>{{ post.title }}</li>
+{% endfor %}
+</ul>

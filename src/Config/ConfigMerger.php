@@ -71,6 +71,7 @@ final class ConfigMerger
             include: $this->getStringArray($merged, 'include'),
             collections: $this->getAssocArray($merged, 'collections'),
             defaults: $this->getListArray($merged, 'defaults'),
+            archives: $this->buildArchiveConfig($merged),
         );
     }
 
@@ -157,5 +158,29 @@ final class ConfigMerger
         }
 
         return array_values($value);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function buildArchiveConfig(array $data): ArchiveConfig
+    {
+        $value = $data['archives'] ?? [];
+
+        if (!\is_array($value)) {
+            return new ArchiveConfig();
+        }
+
+        $enabled = false;
+        if (isset($value['enabled']) && \is_bool($value['enabled'])) {
+            $enabled = $value['enabled'];
+        }
+
+        $layout = 'archive';
+        if (isset($value['layout']) && \is_string($value['layout'])) {
+            $layout = $value['layout'];
+        }
+
+        return new ArchiveConfig(enabled: $enabled, layout: $layout);
     }
 }

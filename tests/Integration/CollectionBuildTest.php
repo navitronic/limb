@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Limb\Tests\Integration;
 
+use Limb\Archive\ArchiveGenerator;
 use Limb\Asset\AssetCopier;
 use Limb\Collection\CollectionBuilder;
 use Limb\Config\ConfigLoader;
@@ -95,6 +96,7 @@ final class CollectionBuildTest extends TestCase
             markdownRenderer: new MarkdownRenderer(),
             outputWriter: new OutputWriter(),
             assetCopier: new AssetCopier(),
+            archiveGenerator: new ArchiveGenerator(),
             eventDispatcher: new EventDispatcher(),
         );
     }
