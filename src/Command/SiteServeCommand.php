@@ -107,12 +107,13 @@ class SiteServeCommand extends Command implements SignalableCommandInterface
         $destDir = $result->destinationDir;
 
         if (!is_dir($destDir)) {
+            $io->text(\sprintf('Ooops something went wrong, the destination directory "%s" does not exist.', $destDir));
             mkdir($destDir, 0o777, true);
         }
 
         // 2. Start PHP built-in server
         $addr = $host.':'.$port;
-        $io->text(\sprintf('Serving at <info>http://%s</info> — press Ctrl+C to stop.', $addr));
+        $io->text(\sprintf('Serving %s at <info>http://%s</info> — press Ctrl+C to stop.', $destDir, $addr));
 
         $this->serverProcess = new Process(['php', '-S', $addr, '-t', $destDir]);
         $this->serverProcess->setTimeout(null);

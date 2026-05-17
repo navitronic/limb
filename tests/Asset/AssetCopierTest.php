@@ -46,6 +46,36 @@ final class AssetCopierTest extends TestCase
     }
 
     #[Test]
+    public function itCopiesStaticAssetsWhenSourceDirectoryIsRelative(): void
+    {
+        $base = sys_get_temp_dir().'/limb_asset_relative_'.bin2hex(random_bytes(4));
+        $cwd = getcwd();
+        self::assertNotFalse($cwd);
+
+        mkdir($base.'/source/assets', 0o777, true);
+        mkdir($base.'/dest', 0o777, true);
+
+        try {
+            chdir($base.'/source');
+            file_put_contents('assets/style.css', 'body { color: blue; }');
+
+            $copier = new AssetCopier();
+            $count = $copier->copy(
+                [getcwd().'/assets/style.css'],
+                '.',
+                $base.'/dest',
+            );
+
+            self::assertSame(1, $count);
+            self::assertFileExists($base.'/dest/assets/style.css');
+            self::assertSame('body { color: blue; }', file_get_contents($base.'/dest/assets/style.css'));
+        } finally {
+            chdir($cwd);
+            $this->removeDirectory($base);
+        }
+    }
+
+    #[Test]
     public function itPreservesDirectoryStructure(): void
     {
         mkdir($this->sourceDir.'/assets/images', 0o777, true);

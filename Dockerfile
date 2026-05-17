@@ -3,7 +3,7 @@
 # =============================================================================
 FROM php:8.4-cli-alpine AS base
 
-RUN docker-php-ext-install opcache
+RUN docker-php-ext-install opcache pcntl
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -43,7 +43,7 @@ RUN composer run-script post-install-cmd --no-interaction || true \
 # =============================================================================
 FROM php:8.4-cli-alpine AS production
 
-RUN docker-php-ext-install opcache
+RUN docker-php-ext-install opcache pcntl
 
 WORKDIR /app
 ENV APP_ENV=prod

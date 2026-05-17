@@ -56,6 +56,12 @@ final class SiteInitCommandTest extends TestCase
         // Assets
         self::assertFileExists($this->tempDir.'/assets/css/style.css');
 
+        // Docker Compose
+        self::assertFileExists($this->tempDir.'/docker-compose.yml');
+        $compose = (string) file_get_contents($this->tempDir.'/docker-compose.yml');
+        self::assertStringContainsString('ghcr.io/navitronic/limb:latest', $compose);
+        self::assertStringContainsString('site:serve', $compose);
+
         // Pages
         self::assertFileExists($this->tempDir.'/index.md');
         self::assertFileExists($this->tempDir.'/about.md');
