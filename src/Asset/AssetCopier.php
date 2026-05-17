@@ -16,16 +16,18 @@ final class AssetCopier
     public function copy(array $absolutePaths, string $sourceDir, string $destDir): int
     {
         $count = 0;
-        $sourcePrefix = rtrim($sourceDir, '/').'/';
+        $normalizedSourceDir = realpath($sourceDir) ?: $sourceDir;
+        $sourcePrefix = rtrim($normalizedSourceDir, '/').'/';
 
         foreach ($absolutePaths as $absolutePath) {
             if (!is_file($absolutePath)) {
                 continue;
             }
 
-            $relativePath = $absolutePath;
-            if (str_starts_with($absolutePath, $sourcePrefix)) {
-                $relativePath = substr($absolutePath, \strlen($sourcePrefix));
+            $normalizedAbsolutePath = realpath($absolutePath) ?: $absolutePath;
+            $relativePath = $normalizedAbsolutePath;
+            if (str_starts_with($normalizedAbsolutePath, $sourcePrefix)) {
+                $relativePath = substr($normalizedAbsolutePath, \strlen($sourcePrefix));
             }
 
             $destPath = rtrim($destDir, '/').'/'.$relativePath;

@@ -62,6 +62,7 @@ my-site/
 ├── assets/
 │   └── css/
 │       └── style.css    # Static assets (copied as-is)
+├── docker-compose.yml    # Docker Compose entrypoint using the Limb image
 ├── about.md             # Pages
 └── index.md
 ```
@@ -389,12 +390,12 @@ For development, clone the repo and use Docker Compose:
 ```bash
 docker compose build
 docker compose run --rm app php bin/console site:build --source=/site
-docker compose run --rm --service-ports app php bin/console site:serve --source=/site
+docker compose up
 ```
 
 ### Running locally (without Docker)
 
-Requires PHP 8.4+ and Composer.
+Requires PHP 8.4+, Composer, and ext-pcntl.
 
 ```bash
 composer install

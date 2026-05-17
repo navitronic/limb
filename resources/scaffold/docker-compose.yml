@@ -1,11 +1,8 @@
 services:
   app:
-    build:
-      context: .
-      target: dev
+    image: ghcr.io/navitronic/limb:latest
     volumes:
-      - .:/app
-      - ./ai-test:/site
+      - .:/site
     command: php bin/console site:serve --source=/site --host=0.0.0.0 --port=4000
     ports:
       - "4000:4000"

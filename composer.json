@@ -7,6 +7,8 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-pcntl": "*",
+
         "league/commonmark": "^2.8",
         "symfony/console": "7.4.*",
         "symfony/dotenv": "7.4.*",
