@@ -398,6 +398,7 @@ Requires PHP 8.4+ and Composer.
 
 ```bash
 composer install
+php bin/console site:init ./test-site
 php bin/console site:build --source=./test-site
 ```
 
@@ -411,7 +412,7 @@ docker compose run --rm app php bin/phpunit
 composer test
 ```
 
-148 tests, 372 assertions. The test suite includes unit tests for every component and integration tests with fixture sites covering collections, nested layouts, data files, permalink overrides, drafts, and a golden file comparison test.
+The test suite includes unit tests for every component and integration tests with fixture sites covering collections, nested layouts, data files, permalink overrides, drafts, and a golden file comparison test.
 
 ### Linting
 
