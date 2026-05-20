@@ -28,6 +28,7 @@ final readonly class SiteConfig
         public array $include = [],
         public array $collections = [],
         public array $defaults = [],
+        public ArchiveConfig $archives = new ArchiveConfig(),
     ) {
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Limb\Pipeline;
 
+use Limb\Archive\ArchiveGenerator;
 use Limb\Asset\AssetCopier;
 use Limb\Collection\CollectionBuilder;
 use Limb\Config\ConfigLoader;
@@ -46,6 +47,7 @@ final class BuildRunner
         private readonly MarkdownRenderer $markdownRenderer,
         private readonly OutputWriter $outputWriter,
         private readonly AssetCopier $assetCopier,
+        private readonly ArchiveGenerator $archiveGenerator,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
@@ -109,6 +111,13 @@ final class BuildRunner
             $doc->url = $this->permalinkGenerator->generate($doc, $pattern);
             $doc->outputPath = $this->outputPathResolver->resolve($doc->url, $config->destination);
         }
+
+        // 7b. Generate archive pages
+        $archiveDocuments = $this->archiveGenerator->generate($posts, $config->archives);
+        foreach ($archiveDocuments as $doc) {
+            $doc->outputPath = $this->outputPathResolver->resolve($doc->url, $config->destination);
+        }
+        $allDocuments = array_merge($allDocuments, $archiveDocuments);
 
         // 8. Render all documents
         $site = new Site(

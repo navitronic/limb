@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Limb\Tests\Command;
 
+use Limb\Archive\ArchiveGenerator;
 use Limb\Asset\AssetCopier;
 use Limb\Collection\CollectionBuilder;
 use Limb\Command\SiteBuildCommand;
@@ -101,6 +102,7 @@ final class SiteBuildCommandTest extends TestCase
             markdownRenderer: new MarkdownRenderer(),
             outputWriter: new OutputWriter(),
             assetCopier: new AssetCopier(),
+            archiveGenerator: new ArchiveGenerator(),
             eventDispatcher: new EventDispatcher(),
         );
     }
